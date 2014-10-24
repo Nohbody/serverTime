@@ -67,28 +67,4 @@ public class DBOps
             }
         }
     }
-
-
-    public ResultSet searchRecipe(String name)
-    {
-
-        try
-        {
-
-            String statement = "(SELECT * FROM recipes.recipes WHERE name = \"" + name + "\")";
-            pst = conn.prepareStatement(statement);
-            resultSet = pst.executeQuery();
-            while (resultSet.next())
-            {
-                System.out.println(resultSet.getInt(1));
-            }
-
-            return resultSet;
-        } catch (SQLException error)
-        {
-            System.out.println("prepared statement failed " + error.getMessage());
-        }
-
-        return resultSet;
-    }
-}    //method to search by tag
+}
