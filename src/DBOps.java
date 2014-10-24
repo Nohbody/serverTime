@@ -15,9 +15,9 @@ public class DBOps
     //this connect method is really just to check for a connections
     //if thats something you want to do before you start manipulating
     //the database
-    public void connect()
+    public boolean connect()
     {
-
+        boolean connected;
         try
         {
             // The newInstance() call is a work around for some
@@ -27,6 +27,7 @@ public class DBOps
         {
             // handle the error
             System.out.println("we hate you so much and cant find the driver");
+            connected = false;
         }
         try
         {
@@ -34,9 +35,10 @@ public class DBOps
                     , "newScanTron", "Cr!TT3rph3r214");
             // Do something with the Connection
             //doing something with this connection
-
+            connected = true;
         } catch (SQLException ex)
         {
+            connected = false;
             // handle any errors
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
@@ -66,5 +68,6 @@ public class DBOps
                 pst = null;
             }
         }
+    return connected;
     }
 }

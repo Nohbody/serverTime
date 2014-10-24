@@ -7,7 +7,7 @@ import org.junit.runners.Suite;
 //JUnit Suite Test
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        DBOpsTest.class ,mainTest.class
+        DBOpsTest.class
 })
 public class JunitTestSuite {
 }
