@@ -2,3 +2,6 @@
 serverTime.iml
 .idea
 junit-4.7.jar
+jbox2d-library-2.2.1.1.jar
+jbox2d-testbed-2.2.1.1.jar
+jbox2d-serialization-1.1.0.jar
