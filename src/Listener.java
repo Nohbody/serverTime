@@ -11,18 +11,12 @@ public class Listener implements Runnable{
 	public Scanner dataScan;
 	
 	public Listener() throws FileNotFoundException {
-		dataFile = new File("./src/Color.txt");
-		dataScan = new Scanner(dataFile);
-		color = dataScan.nextLine();
+		color = (String)(DBOps.getData("info", "1", "id", "string_colour")).get(0);
+		System.out.println(color);
 	}
 	
 	public void run() {
-		try {
-			dataScan = new Scanner(dataFile);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		color = dataScan.nextLine();
+		color = (String)(DBOps.getData("info", "1", "id", "string_colour")).get(0);
 		
 		if (color.equals("RED"))
 			Driver.newPanel.sharedView.setBackground(Color.RED);
