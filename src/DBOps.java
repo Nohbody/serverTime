@@ -31,7 +31,7 @@ public class DBOps
         }
         try
         {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/recipes?allowMultiQueries=true"
+            conn = DriverManager.getConnection("jdbc:mysql://72.175.54.87:3306/servertime"
                     , "newScanTron", "Cr!TT3rph3r214");
             // Do something with the Connection
             //doing something with this connection
