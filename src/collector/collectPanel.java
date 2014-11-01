@@ -8,16 +8,13 @@ import org.newdawn.fizzy.World;
 import org.newdawn.fizzy.WorldListener;
 import pulpcore.Input;
 import pulpcore.image.Colors;
-import pulpcore.image.CoreFont;
 import pulpcore.image.CoreImage;
 import pulpcore.platform.desktop.CoreApplication;
 import pulpcore.scene.Scene2D;
 import pulpcore.sprite.FilledSprite;
 import pulpcore.sprite.Group;
-import pulpcore.sprite.Label;
 import pulpcore.sprite.Sprite;
 
-import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -31,9 +28,7 @@ public class collectPanel extends Scene2D
 
     public PhysicsSprite playerSprite;
 
-    CoreFont font = CoreFont.getSystemFont();
-    Label playerDataLabel = new Label(font, "", 0, 0);
-    DecimalFormat df = new DecimalFormat("#0.00");
+    Random rand = new Random();
 
     public static void main(String[] args)
     {
@@ -55,7 +50,19 @@ public class collectPanel extends Scene2D
 
         // group of physics sprites that have potential non-physics interaction
         final Group spriteList = new Group();
+        final Group coinList = new Group();
+
         add(spriteList);
+        add(coinList);
+        CoreImage coinImage = new CoreImage(10, 10).tint(Colors.YELLOW);
+        int count = 0;
+        while (count < 6)
+        {
+            CollectObject coin = new CollectObject("one", coinImage, rand.nextInt(800), 75);
+            coin.setBodyCircle(true, physicsWorld);
+            coinList.add(coin);
+            count ++;
+        }
 
         // create and add dynamic objects
         CoreImage playerImage = new CoreImage(32,32).tint(Colors.GREEN);
@@ -63,13 +70,13 @@ public class collectPanel extends Scene2D
         playerSprite.setBodyRectangle(true, physicsWorld);
         spriteList.add(playerSprite);
 
-        CoreImage circImage = CoreImage.load("ball.png");
+        CoreImage circImage = CoreImage.load("./collector/ball.png");
 
         PhysicsSprite circSprite = new PhysicsSprite(circImage, 300, 75);
         circSprite.setBodyCircle(true, physicsWorld);
         spriteList.add(circSprite);
 
-        CoreImage boxImage = CoreImage.load("box.png");
+        CoreImage boxImage = CoreImage.load("./collector/box.png");
 
         PhysicsSprite boxSprite = new PhysicsSprite(boxImage, 550, 75);
         boxSprite.setBodyRectangle(true, physicsWorld);
@@ -95,12 +102,12 @@ public class collectPanel extends Scene2D
         PhysicsSprite rightSprite = new PhysicsSprite(rightImage, 805, 500);
         rightSprite.setBodyRectangle(false, physicsWorld);
         spriteList.add(rightSprite);
-
+        //these are just some platforms
         CoreImage specialImage = new CoreImage(60,60).tint(Colors.PURPLE);
         PhysicsSprite specialBox = new PhysicsSprite(specialImage, 200, 300);
         specialBox.setBodyRectangle(false, physicsWorld);
         spriteList.add(specialBox);
-
+         //just a line break to break it up
         CoreImage platformOneImage = new CoreImage(120,40).tint(Colors.PURPLE);
         PhysicsSprite platformOne = new PhysicsSprite(platformOneImage, 500, 388);
         platformOne.setBodyRectangle(false, physicsWorld);
@@ -118,10 +125,13 @@ public class collectPanel extends Scene2D
         physicsWorld.addBodyListener( playerSprite.getBody(), new WorldListener()
         {
             PhysicsSprite p;
+            PhysicsSprite c;
             public void collided(CollisionEvent event)
             {
-
+                //i think these are things just to check for collisons.  i
+                //added a second to keep seperate track of the coins
                 p = getPhysicsSprite( event.getBodyB(), spriteList );
+                c = getPhysicsSprite( event.getBodyB(), coinList );
                 if (p == null) return;
 
                 if ( p.getName().equals("special") )
@@ -140,11 +150,22 @@ public class collectPanel extends Scene2D
             {
                 Random rand = new Random();
                 p = getPhysicsSprite( event.getBodyB(), spriteList );
+                c = getPhysicsSprite( event.getBodyB(), coinList);
                 // this method intentionally left blank
-                if (playerSprite.getYVelocity() > 0)
-                    p.setImage(p.getImage().tint(Colors.rgb(rand.nextInt(254), rand.nextInt(254), rand.nextInt(254))));
-                else if (playerSprite.getYVelocity() < 0)
-                    p.setImage(p.getImage().tint(Colors.rgb(rand.nextInt(254), rand.nextInt(254), rand.nextInt(254))));;
+                if (p != null)
+                {
+                    if (playerSprite.getYVelocity() > 0)
+                        p.setImage(p.getImage().tint(Colors.rgb(rand.nextInt(254), rand.nextInt(254), rand.nextInt(254))));
+                    else if (playerSprite.getYVelocity() < 0)
+                        p.setImage(p.getImage().tint(Colors.rgb(rand.nextInt(254), rand.nextInt(254), rand.nextInt(254))));
+                }else if (c != null)
+                {
+                    if (playerSprite.getYVelocity() > 0)
+                        c.setImage(c.getImage().tint(Colors.rgb(rand.nextInt(254), rand.nextInt(254), rand.nextInt(254))));
+                    else if (playerSprite.getYVelocity() < 0)
+                        c.setImage(c.getImage().tint(Colors.rgb(rand.nextInt(254), rand.nextInt(254), rand.nextInt(254))));
+                    coinList.remove(c);
+                }
             }
         });
     }

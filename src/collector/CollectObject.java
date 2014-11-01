@@ -1,9 +1,11 @@
 package collector;
 
+import pulpcore.image.CoreImage;
+
 /**
  * Created by newScanTron on 10/28/2014.
  */
-public class CollectObject
+public class CollectObject extends PhysicsSprite
 {
     private String name;
     private int[] location;
@@ -11,7 +13,11 @@ public class CollectObject
     {
         return name;
     }
-
+    public CollectObject(String name, CoreImage image, float x, float y)
+    {
+        super(name, image, x, y);
+        this.name = name;
+    }
     public void setName(String name)
     {
         this.name = name;
@@ -27,8 +33,5 @@ public class CollectObject
         this.location = location;
     }
 
-    public CollectObject(String name)
-    {
-        this.name = name;
-    }
+
 }
