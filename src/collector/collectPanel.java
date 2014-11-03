@@ -54,6 +54,7 @@ public class collectPanel extends Scene2D
 
         add(spriteList);
         add(coinList);
+        //this loop makes and places the coins in random spots
         CoreImage coinImage = new CoreImage(10, 10).tint(Colors.YELLOW);
         int count = 0;
         while (count < 6)
@@ -112,7 +113,16 @@ public class collectPanel extends Scene2D
         PhysicsSprite platformOne = new PhysicsSprite(platformOneImage, 500, 388);
         platformOne.setBodyRectangle(false, physicsWorld);
         spriteList.add(platformOne);
-
+        //going to randomly create and place platforms
+//        int addPlatformCount = 0;
+//        while (addPlatformCount <5)
+//        {
+//            CoreImage iterateImage = new CoreImage(120,40).tint(Colors.PURPLE);
+//            PhysicsSprite platformIterate = new PhysicsSprite(iterateImage, rand.nextInt(800), rand.nextInt(400));
+//            platformOne.setBodyRectangle(false, physicsWorld);
+//            spriteList.add(platformIterate);
+//            addPlatformCount ++;
+//        }
 //        // text labels
 //        CoreFont font = CoreFont.getSystemFont().tint(Colors.WHITE);
 //        Label directions = new Label(font, "Press ARROW keys to add velocity to gray box or R key to reset.", 100, 40);

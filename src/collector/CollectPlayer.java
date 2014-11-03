@@ -1,9 +1,11 @@
 package collector;
 
+import pulpcore.image.CoreImage;
+
 /**
  * Created by newScanTron on 10/28/2014.
  */
-public class CollectPlayer
+public class CollectPlayer extends characterSprite
 {
     private String name;
 
@@ -28,9 +30,10 @@ public class CollectPlayer
     }
 
     private int collectScore;
-    public CollectPlayer(String name)
+    public CollectPlayer(String name, CoreImage image, float xInt, float yInt)
     {
-        this.name = name;
+
+        super(name, image, xInt, yInt);
     }
 
 }

@@ -5,10 +5,9 @@
  Author: Adam Clemons
  ************************************************************* */
 
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
-
-import javax.swing.JFrame;
 
 public class Driver {
 
