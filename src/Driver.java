@@ -5,16 +5,16 @@
  Author: Adam Clemons
  ************************************************************* */
 
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
-
-import javax.swing.JFrame;
 
 public class Driver {
 
 	public static TestPanel newPanel;
 
 	public static void main(String[] args) throws IOException {
+		DBOps.connect();
 		
 		// Creates the JFrame, sets what happens when we close it, and makes it a fixed size (dependent on JPanel sizes)
 		JFrame displayFrame = new JFrame("View Connectivity!"); 
@@ -30,5 +30,6 @@ public class Driver {
 		displayFrame.pack();
 		displayFrame.setLocationRelativeTo(null);
 		displayFrame.setVisible(true); // Allows us to see the Frame
+		
 	}
 }

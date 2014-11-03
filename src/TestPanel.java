@@ -1,7 +1,6 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagLayout;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -10,12 +9,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
 
 
 public class TestPanel extends JPanel{
@@ -97,52 +90,26 @@ public class TestPanel extends JPanel{
 	private class ButtonListener implements ActionListener {
 
 		public ButtonListener() throws IOException {
-			dataFile = new File("./src/Color.txt");
-			dataWriter = new FileWriter(dataFile);
-			bufferedWriter = new BufferedWriter(dataWriter);
-			bufferedWriter.write("BLACK");
-			bufferedWriter.close();
+			DBOps.updateData("info", "string_colour", "BLACK", "id", "1");
 		}
 		
 		public void actionPerformed(ActionEvent e){
 			
-			dataFile = new File("./src/Color.txt");
-			try {
-				dataWriter = new FileWriter(dataFile);
-			} catch (IOException e2) {
-				e2.printStackTrace();
-			}
-			bufferedWriter = new BufferedWriter(dataWriter);
 			
 			if (e.getSource() == redButton) {
 				ownView.setBackground(Color.RED);
 				// Change shared data to red
-				try {
-					bufferedWriter.write("RED");
-					bufferedWriter.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				DBOps.updateData("info", "string_colour", "RED", "id", "1");
 			}
 			else if (e.getSource() == cyanButton) {
 				ownView.setBackground(Color.CYAN);
 				// Change shared data to cyan
-				try {
-					bufferedWriter.write("CYAN");
-					bufferedWriter.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				DBOps.updateData("info", "string_colour", "CYAN", "id", "1");
 			}
 			else {
 				ownView.setBackground(Color.GREEN);
 				// Change shared data to green
-				try {
-					bufferedWriter.write("GREEN");
-					bufferedWriter.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				DBOps.updateData("info", "string_colour", "GREEN", "id", "1");
 			}
 			
 		}

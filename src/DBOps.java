@@ -1,73 +1,86 @@
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
- * Created by newScanTron on 10/9/2014.
+ * Created by Adam on 11/1/2014
  */
-public class DBOps
-{
+public final class DBOps {
     static Connection conn = null;
     static PreparedStatement pst = null;
-    ResultSet resultSet = null;
+    static ResultSet resultSet = null;
     ResultSet workingSet = null;
+    User[] users = {};
+    View[] views = {};
     int found_id = 0;
-    String stmnt = "";
 
-    //this connect method is really just to check for a connections
-    //if thats something you want to do before you start manipulating
-    //the database
-    public boolean connect()
+    public static void connect()
     {
-        boolean connected;
-        try
-        {
-            // The newInstance() call is a work around for some
-            // broken Java implementations
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-        } catch (Exception ex)
-        {
-            // handle the error
-            System.out.println("we hate you so much and cant find the driver");
-            connected = false;
+
+    	String url = "jdbc:mysql://minazone.com:3306/";
+    	String db = "project3";
+    	String driver = "com.mysql.jdbc.Driver";
+    	String user = "guest";
+    	String pass = "victini494";
+    	            try {
+						Class.forName(driver).newInstance();
+						conn = DriverManager.getConnection(url+db,user,pass);
+						System.out.println("Connected");
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					} catch (InstantiationException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					}
+    }
+
+    public static ArrayList getData(String location, String data, String where, String column) {
+      try {
+
+          String statement = "SELECT `" + column + "` FROM `" + location + "` WHERE `" + where + "` = \"" + data + "\"";
+          pst = conn.prepareStatement(statement);
+          resultSet = pst.executeQuery();
+          ArrayList results = new ArrayList();
+          while (resultSet.next())
+        	  results.add(resultSet.getString(1));
+          return results;
+      }
+      catch (SQLException error) {
+          System.out.println("The state change failed. " + error.getMessage());
+      }
+      return null;
+    }
+
+    public static void updateData(String location, String column, String data, String where, String condition) {
+    	try {
+    		String statement = "UPDATE `" + location + "` SET `" + column + "` = \"" + data + "\" WHERE `" + where + "` = \"" + condition +"\"";
+    		pst = conn.prepareStatement(statement);
+            pst.executeUpdate();
+            System.out.println("Updated table");
+    	}
+    	catch (SQLException error) {
+            System.out.println("The state change failed. " + error.getMessage());
         }
-        try
-        {
-            conn = DriverManager.getConnection("jdbc:mysql://72.175.54.87:3306/servertime"
-                    , "newScanTron", "Cr!TT3rph3r214");
-            // Do something with the Connection
-            //doing something with this connection
-            connected = true;
-        } catch (SQLException ex)
-        {
-            connected = false;
-            // handle any errors
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-        } finally
-        {
-            // going to close all these things but in this program is probable less
-            //necessary cus this thing is using basically no memory.
-            if (resultSet != null)
-            {
-                try
-                {
-                    resultSet.close();
-                } catch (SQLException sqlEx)
-                {
-                } // ignore
-                resultSet = null;
-            }
-            if (pst != null)
-            {
-                try
-                {
-                    pst.close();
-                } catch (SQLException sqlEx)
-                {
-                } // ignore
-                pst = null;
-            }
+
+    }
+    
+    /*  This creates an entire new entry into the table. Think carefully about whether
+    	you actually want to use this or the updateData method. Otherwise the DB will
+    	be cluttered with useless data.
+    */
+    public static void insertData(String location, String column, String data) {
+    	try {
+    		String statement = "INSERT INTO `" + location + "`(`" + column + "`) VALUES(\"" + data + "\")";
+    		System.out.println(statement);
+    		pst = conn.prepareStatement(statement);
+            pst.executeUpdate();
+            System.out.println("Inserted data to table");
+    	}
+    	catch (SQLException error) {
+            System.out.println("The state change failed. " + error.getMessage());
+
         }
-    return connected;
     }
 }
