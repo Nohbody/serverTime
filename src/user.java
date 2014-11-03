@@ -1,14 +1,14 @@
 /**
  * Created by newScanTron on 10/24/2014.
  */
-public class user
+public class User
 {
 
     String email;
     String password;
     String name;
 
-    public void user(String name, String email, String password)
+    public void User(String name, String email, String password)
     {
         this.name = name;
         this.email = email;
@@ -46,3 +46,4 @@ public class user
     }
 
 }
+
