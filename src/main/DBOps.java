@@ -1,3 +1,4 @@
+package main;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -10,7 +11,6 @@ public final class DBOps {
     static ResultSet resultSet = null;
     ResultSet workingSet = null;
     User[] users = {};
-    View[] views = {};
     int found_id = 0;
 
     public static void connect()
