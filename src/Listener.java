@@ -1,4 +1,4 @@
-import java.awt.Color;
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -15,17 +15,24 @@ public class Listener implements Runnable{
 		System.out.println(color);
 	}
 	
-	public void run() {
-		color = (String)(DBOps.getData("info", "1", "id", "string_colour")).get(0);
-		
-		if (color.equals("RED"))
-			Driver.newPanel.sharedView.setBackground(Color.RED);
-		if (color.equals("GREEN"))
-			Driver.newPanel.sharedView.setBackground(Color.GREEN);
+	public void run()
+    {
+        color = (String) (DBOps.getData("info", "1", "id", "string_colour")).get(0);
+
+        if (color.equals("RED"))
+            Driver.newPanel.sharedView.setBackground(Color.RED);
+        if (color.equals("GREEN"))
+        {
+            Driver.newPanel.sharedView.setBackground(Color.GREEN);
+        System.out.println("im black");
+        }
 		if (color.equals("CYAN"))
 			Driver.newPanel.sharedView.setBackground(Color.CYAN);
 		if (color.equals("BLACK"))
-			Driver.newPanel.sharedView.setBackground(Color.BLACK);
+        {
+            Driver.newPanel.sharedView.setBackground(Color.BLACK);
+            System.out.println("im black");
+        }
 	}
 
 }
