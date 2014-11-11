@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.text.ParseException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +26,8 @@ import javax.swing.text.BadLocationException;
 public class GUI extends JPanel{
 
 	private static final long serialVersionUID = 1L;
-	public JPanel mainPanel, chatPanel;
+	public JPanel mainPanel;
+	public ChatPanel chatPanel;
 	public JLabel credits, title;
 	public GridBagLayout gLayout;
 	public GridBagConstraints c;
@@ -46,14 +46,12 @@ public class GUI extends JPanel{
 			c = new GridBagConstraints();
 		mainPanel = new LoginPanel();
 			mainPanel.setBackground(Color.BLACK);
-		chatPanel = new JPanel();
-			ChatPanel actualPanel = new ChatPanel();
-			chatPanel.add(actualPanel);
+		chatPanel = new ChatPanel();
 			chatPanel.setBackground(Color.BLACK);
 			chatPanel.setBorder(new MatteBorder(2,0,0,0,Color.MAGENTA));
 			
 		poolExecutor = new ScheduledThreadPoolExecutor(1);
-		poolExecutor.scheduleAtFixedRate(actualPanel.chatRunner, (long) 1000, (long) 1000, TimeUnit.MILLISECONDS);
+		poolExecutor.scheduleAtFixedRate(chatPanel, (long) 1000, (long) 1000, TimeUnit.MILLISECONDS);
 		
 		// Set panel settings
 		setPreferredSize(new Dimension(500, 600));

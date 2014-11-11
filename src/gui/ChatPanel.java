@@ -16,7 +16,6 @@ import java.util.TimeZone;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -24,7 +23,9 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
+
 import main.DBOps;
+import main.Driver;
 
 /* *************************************************************
 File Name: ChatPanel.java
@@ -33,7 +34,7 @@ Purpose: Layout for chatting
 Author: Adam Clemons
 ************************************************************* */
 
-public class ChatPanel extends JPanel{
+public class ChatPanel extends JPanel implements Runnable{
 
 	private static final long serialVersionUID = 1L;
 	public ArrayList<String> messages;
@@ -44,19 +45,18 @@ public class ChatPanel extends JPanel{
 	public GridBagLayout gLayout;
 	public GridBagConstraints c;
 	public String lastSent;
-	public ChatRunner chatRunner;
 	public SimpleAttributeSet keyWord;
 	
 	
 	public ChatPanel() throws ParseException, BadLocationException {
-		
-		chatRunner = new ChatRunner();
 		messages = new ArrayList<String>();
 		messageField = new JFormattedTextField();
 			messageField.setColumns(20);
-			messageField.setText("BLAH");
+			messageField.setText("You must log in to chat.");
+			messageField.setEditable(false);
 		send = new JButton("Send");
 			send.addActionListener(new SendListener());
+			send.setEnabled(false);
 		messageArea = new JTextPane();
 			messageArea.setEditable(false);
 		DefaultCaret caret = (DefaultCaret)messageArea.getCaret();
@@ -66,12 +66,7 @@ public class ChatPanel extends JPanel{
 		
 		keyWord = new SimpleAttributeSet();
 			
-		messages.add("User1: Hi!");
-		messages.add("Steven: What is up?");
-		messages.add("Steven: What is up?");
-		messages.add("Steven: What is up?");
-		messages.add("Steven: What is up?");
-		messages.add("Steven: What is up?");
+		messages.add("Skynet: Welcome to Server Time Chat!");
 		
 		gLayout = new GridBagLayout();
 		c = new GridBagConstraints();
@@ -103,10 +98,7 @@ public class ChatPanel extends JPanel{
 	
 	public void updateChat() throws BadLocationException {
 		messageArea.setText(" ");
-		if (messages.size() < 6)
-			messageArea.setLayout(new GridLayout(6,1));
-		else
-			messageArea.setLayout(new GridLayout(messages.size(),1));
+		messageArea.setLayout(new GridLayout(messages.size(),1));
 		
 		for (String m:messages) {
 			String[] textWords = m.split(" ");
@@ -119,10 +111,6 @@ public class ChatPanel extends JPanel{
 			messageArea.getStyledDocument().insertString(messageArea.getText().length(),message + "\n", keyWord);
 		};
 		
-		if (messages.size() < 6) {
-			for (int i = 6-messages.size(); i < 6; i++)
-				messageArea.add(new JLabel(""));
-		}
 		messageArea.revalidate(); messageArea.repaint();
 	}
 	
@@ -138,32 +126,31 @@ public class ChatPanel extends JPanel{
 	private class SendListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			DBOps.updateData("info", "string_colour", messageField.getText(), "id", "2");
+			DBOps.updateData("info", "string_colour", Driver.currentUser.getName() + ": " + messageField.getText(), "id", "2");
 			try {
 				DBOps.updateData("info", "time_stamp", getTimeStamp(), "id", "2");
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			}
+			messageField.setText("");
 		}
 	}
-	
-	private class ChatRunner implements Runnable {
 
-		public void run() {
-			System.out.println("RUNNING");
-			
-			
-			if (!(DBOps.getData("info", "2", "id", "string_colour").get(0).equals(messages.get(messages.size()-1))
-					&& DBOps.getData("info", "2", "id", "time_stamp").get(0).equals(lastSent))) {
-					messages.add((String) DBOps.getData("info", "2", "id", "string_colour").get(0));
-					lastSent = (String) DBOps.getData("info", "2", "id", "time_stamp").get(0);
-					try {
-						updateChat();
-					} catch (BadLocationException e) {
-						e.printStackTrace();
-					}
+	public void run() {
+		System.out.println("RUNNING");
+
+		if (!(DBOps.getData("info", "2", "id", "string_colour").get(0)
+				.equals(messages.get(messages.size() - 1)) && DBOps
+				.getData("info", "2", "id", "time_stamp").get(0)
+				.equals(lastSent))) {
+			messages.add((String) DBOps.getData("info", "2", "id","string_colour").get(0));
+			lastSent = (String) DBOps.getData("info", "2", "id", "time_stamp").get(0);
+			try {
+				updateChat();
+			} catch (BadLocationException e) {
+				e.printStackTrace();
 			}
 		}
-		
 	}
+
 }

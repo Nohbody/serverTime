@@ -7,14 +7,16 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import main.DBOps;
 import main.Driver;
+import main.User;
 
 /* *************************************************************
 File Name: LoginPanel.java
@@ -106,16 +108,51 @@ public class LoginPanel extends JPanel {
 	private class SubmitListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			boolean success;
+			
+			boolean success = true;
+			boolean found = false;
+			
 			// Log in check
 			if (loggingin) {
-				System.out.println("This guy is trying to log in.");
-				success = true;
+				Driver.updateUsers();
+				String attemptName = usernameField.getText();
+				for (User u:Driver.users) {
+					if (attemptName.equals(u.getName())) {
+						found = true;
+						
+						if (passwordField.getText().equals(u.getPassword())) {
+							JOptionPane.showMessageDialog(null, "You are now logged in!");
+							Driver.currentUser = new User(attemptName, passwordField.getText());
+							success = true;
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "Invalid password!");
+							success = false;
+							break;
+						}
+					}
+				}
+				if (!found){
+					JOptionPane.showMessageDialog(null, "Username not registered!");
+					success = false;
+				}
 			}
 			// Registration check
 			else {
-				System.out.println("This guy is trying to register.");
-				success = true;
+				Driver.updateUsers();
+				String attemptName = usernameField.getText();
+				for (User u:Driver.users) {
+					if (attemptName.equals(u.getName())) {
+						JOptionPane.showMessageDialog(null, "This username has already been taken");
+						success = false;
+					}
+				}
+				if (success) {
+					JOptionPane.showMessageDialog(null, "Username registered!");
+					Driver.currentUser = new User(attemptName, passwordField.getText());
+					DBOps.insertData("users", "id`, `user`, `password`, `connected", 
+							((Driver.users.size() + 1) + "\",\"" + attemptName + "\", \"" + passwordField.getText() + "\", \"0"));
+				}
 			}
 			
 			if (success) {
@@ -123,6 +160,10 @@ public class LoginPanel extends JPanel {
 				Driver.newPanel.mainPanel.removeAll();
 				Driver.newPanel.mainPanel.setPreferredSize(null);
 				Driver.newPanel.mainPanel.add(new MenuPanel());
+				
+				Driver.newPanel.chatPanel.messageField.setText("");
+				Driver.newPanel.chatPanel.messageField.setEditable(true);
+				Driver.newPanel.chatPanel.send.setEnabled(true);
 				
 				Driver.newPanel.revalidate(); Driver.newPanel.repaint();
 			}

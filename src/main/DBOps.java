@@ -36,13 +36,13 @@ public final class DBOps {
 					}
     }
 
-    public static ArrayList getData(String location, String data, String where, String column) {
+    public static ArrayList<String> getData(String location, String data, String where, String column) {
       try {
 
           String statement = "SELECT `" + column + "` FROM `" + location + "` WHERE `" + where + "` = \"" + data + "\"";
           pst = conn.prepareStatement(statement);
           resultSet = pst.executeQuery();
-          ArrayList results = new ArrayList();
+          ArrayList<String> results = new ArrayList<String>();
           while (resultSet.next())
         	  results.add(resultSet.getString(1));
           return results;
@@ -52,6 +52,23 @@ public final class DBOps {
       }
       return null;
     }
+    
+    public static ArrayList<String> getColumn(String location, String column) {
+        try {
+
+            String statement = "SELECT `" + column + "` FROM `" + location + "`";
+            pst = conn.prepareStatement(statement);
+            resultSet = pst.executeQuery();
+            ArrayList<String> results = new ArrayList<String>();
+            while (resultSet.next())
+          	  results.add(resultSet.getString(1));
+            return results;
+        }
+        catch (SQLException error) {
+            System.out.println("The state change failed. " + error.getMessage());
+        }
+        return null;
+      }
 
     public static void updateData(String location, String column, String data, String where, String condition) {
     	try {
@@ -72,7 +89,6 @@ public final class DBOps {
     public static void insertData(String location, String column, String data) {
     	try {
     		String statement = "INSERT INTO `" + location + "`(`" + column + "`) VALUES(\"" + data + "\")";
-    		System.out.println(statement);
     		pst = conn.prepareStatement(statement);
             pst.executeUpdate();
             System.out.println("Inserted data to table");
