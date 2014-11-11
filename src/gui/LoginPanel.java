@@ -1,13 +1,13 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -36,10 +36,8 @@ public class LoginPanel extends JPanel {
 	
 	public LoginPanel() {
 		login = new JButton("Login!");
-			login.setPreferredSize(new Dimension(100,10));
 			login.addActionListener(new ButtonListener());
 		register = new JButton("Register!");
-			register.setPreferredSize(new Dimension(100,10));
 			register.addActionListener(new ButtonListener());
 		setLayout(new GridLayout(1, 2));
 		
@@ -72,12 +70,12 @@ public class LoginPanel extends JPanel {
 				submit.addActionListener(new SubmitListener());
 			
 			setLayout(gLayout);
-			setPreferredSize(new Dimension(200,200));
 			removeAll();
 			
 			// Add components
 			c.fill = GridBagConstraints.BOTH;
-			c.weightx = 75;
+			c.weighty = (double) 1/3;
+			c.weightx = .5;
 			c.gridx = 0;
 			c.gridy = 0;
 			add(username,c);
@@ -86,7 +84,6 @@ public class LoginPanel extends JPanel {
 			c.gridy = 0;
 			add(usernameField,c);
 			
-			c.weightx = 75;
 			c.gridx = 0;
 			c.gridy = 1;
 			add(password,c);
@@ -96,6 +93,7 @@ public class LoginPanel extends JPanel {
 			add(passwordField,c);
 			
 			c.gridwidth = 2;
+			c.weightx = 1;
 			c.gridx = 0;
 			c.gridy = 2;
 			add(submit,c);
@@ -125,9 +123,6 @@ public class LoginPanel extends JPanel {
 				Driver.newPanel.mainPanel.removeAll();
 				Driver.newPanel.mainPanel.setPreferredSize(null);
 				Driver.newPanel.mainPanel.add(new MenuPanel());
-				
-				Driver.newPanel.chatPanel.removeAll();
-				Driver.newPanel.chatPanel.add(new ChatPanel());
 				
 				Driver.newPanel.revalidate(); Driver.newPanel.repaint();
 			}

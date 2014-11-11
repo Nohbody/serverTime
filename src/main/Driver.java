@@ -10,15 +10,17 @@ import gui.GUI;
 
 import java.awt.BorderLayout;
 import java.io.IOException;
+import java.text.ParseException;
 
 import javax.swing.JFrame;
+import javax.swing.text.BadLocationException;
 
 public class Driver {
 
 	public static GUI newPanel;
 	public static JFrame displayFrame;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, ParseException, BadLocationException {
 		DBOps.connect();
 		
 		// Creates the JFrame, sets what happens when we close it, and makes it a fixed size (dependent on JPanel sizes)

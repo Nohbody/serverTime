@@ -6,12 +6,16 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.text.ParseException;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
+import javax.swing.text.BadLocationException;
 
 /* *************************************************************
  File Name: GUI.java
@@ -27,14 +31,10 @@ public class GUI extends JPanel{
 	public JLabel credits, title;
 	public GridBagLayout gLayout;
 	public GridBagConstraints c;
+	private ScheduledThreadPoolExecutor poolExecutor;
 	
-	public GUI() {
+	public GUI() throws ParseException, BadLocationException {
 		// Initialize components
-		credits = new JLabel("Created by: SS Group 1");
-			credits.setHorizontalAlignment(SwingConstants.CENTER);
-			credits.setForeground(Color.WHITE);
-			credits.setBackground(Color.BLACK);
-				credits.setOpaque(true);
 		title = new JLabel("Server Time");
 			title.setFont(new Font("Arial Black", Font.PLAIN, 72));
 			title.setHorizontalAlignment(SwingConstants.CENTER);
@@ -45,15 +45,18 @@ public class GUI extends JPanel{
 		gLayout = new GridBagLayout();
 			c = new GridBagConstraints();
 		mainPanel = new LoginPanel();
-			mainPanel.setPreferredSize(new Dimension(500, 500));		
 			mainPanel.setBackground(Color.BLACK);
 		chatPanel = new JPanel();
-			chatPanel.add(credits);
+			ChatPanel actualPanel = new ChatPanel();
+			chatPanel.add(actualPanel);
 			chatPanel.setBackground(Color.BLACK);
 			chatPanel.setBorder(new MatteBorder(2,0,0,0,Color.MAGENTA));
+			
+		poolExecutor = new ScheduledThreadPoolExecutor(1);
+		poolExecutor.scheduleAtFixedRate(actualPanel.chatRunner, (long) 1000, (long) 1000, TimeUnit.MILLISECONDS);
 		
 		// Set panel settings
-		setPreferredSize(new Dimension(500, 500));
+		setPreferredSize(new Dimension(500, 600));
 		setLayout(gLayout);
 		setBorder(BorderFactory.createLineBorder(Color.MAGENTA, 2));
 		setBackground(Color.BLACK);
@@ -61,19 +64,18 @@ public class GUI extends JPanel{
 		// Add components
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 0;
+		c.weighty = 0;
 		c.gridx = 0;
 		c.gridy = 0;
 		add(title,c);
 		
 		c.fill = GridBagConstraints.CENTER;
-		c.weightx = 500;
-		c.weighty = 300;
+		c.weighty = .6;
 		c.gridx = 0;
 		c.gridy = 1;
 		add(mainPanel,c);
 		
 		c.fill = GridBagConstraints.BOTH;
-		c.weightx = 0;
 		c.weighty = 0;
 		c.gridx = 0;
 		c.gridy = 2;
