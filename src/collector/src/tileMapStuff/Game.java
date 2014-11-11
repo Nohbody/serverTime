@@ -3,6 +3,7 @@ package collector.src.tileMapStuff;
 import collector.src.dbStuff.collectListener;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -22,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class Game extends Canvas implements KeyListener {
 	/** The sprite we're going to use for our player */
 	private BufferedImage sprite;
+    private BufferedImage backgroundSprite;
 	/** The buffered strategy used for accelerated rendering */
 	private BufferStrategy strategy;
 
@@ -38,7 +40,7 @@ public class Game extends Canvas implements KeyListener {
 	private Map map;
 	/** The player entity that will be controlled with cursors */
 	private Zombie player;
-	private float gravity = 0.02f;
+	private float gravity = 0.08f;
     collectListener dataListener;
     ScheduledThreadPoolExecutor poolExecutor;
 
@@ -48,40 +50,52 @@ public class Game extends Canvas implements KeyListener {
 	public Game() throws FileNotFoundException
     {
 
+        //our DataBase connection
         collector.src.dbStuff.dbCollectConnect.connect();
+        //adding a runnable dataListener class to our poolExecutor
         dataListener = new collectListener();
         poolExecutor = new ScheduledThreadPoolExecutor(1);
         poolExecutor.scheduleAtFixedRate(dataListener, (long) 100, (long) 100, TimeUnit.MILLISECONDS);
 
-
-		// right, I'm going to explain this in detail since it always seems to
-		// confuse.
-		//
 		// Here we're just loading a sprite, however we're doing this by using
 		// the class loader. The reason we do this is so that when developing you
 		// can use local files, but when distributing to your players you can
 		// package everything up into jar files which can be handled by webstart
-		//
-		// However, this means that when you run the program the directory above
-		// "res" must be in your classpath so the resources can be found.
+
 		try {
 			URL url = Thread.currentThread().getContextClassLoader().getResource("collector/src/PNG/spaceShip.png");
 			if (url == null) {
 				System.err.println("Unable to find sprite: res/sprite.gif");
 				System.exit(0);
 			}
-			sprite = ImageIO.read(url);
+		    sprite = ImageIO.read(url);
 		} catch (IOException e) {
 			System.err.println("Unable to load sprite: res/sprite.gif");
 			System.exit(0);
 		}
+        //get a background image
+        try {
+            URL url = Thread.currentThread().getContextClassLoader().getResource("collector/src/PNG/backGround.png");
+            if (url == null) {
+                System.err.println("Unable to find sprite: res/sprite.gif");
+                System.exit(0);
+            }
+            backgroundSprite = ImageIO.read(url);
+        } catch (IOException e) {
+            System.err.println("Unable to load sprite: res/sprite.gif");
+            System.exit(0);
+        }
 
 		// create the AWT frame. Its going to be fixed size (500x500)
 		// and not resizable - this just gives us less to account for
 		Frame frame = new Frame("Tile tileMapStuff.Map Example");
 		frame.setLayout(null);
 		setBounds(0,0,1000,620);
-		frame.add(this);
+        JPanel panel = new JPanel();
+        panel.add(this);
+
+
+        frame.add(panel);
 		frame.setSize(1000,620);
 		frame.setResizable(false);
 
@@ -92,10 +106,6 @@ public class Game extends Canvas implements KeyListener {
 				System.exit(0);
 			}
 		});
-
-		// add a key listener that allows us to respond to player
-		// key presses. We're actually just going to set some flags
-		// to indicate the current player direciton
 		frame.addKeyListener(this);
 		addKeyListener(this);
 
@@ -113,6 +123,9 @@ public class Game extends Canvas implements KeyListener {
         {
             map = new Map();
         } catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        } catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -137,10 +150,8 @@ public class Game extends Canvas implements KeyListener {
 
             Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
 
-			// clear the screen
-			g.setColor(Color.black);
-			g.fillRect(0,0,500,500);
-
+			// clear the screen and this picture
+            g.drawImage(backgroundSprite, 0, 0, null);
 			// render our game objects
 			g.translate(0,20);
 			map.paint(g);
@@ -158,11 +169,7 @@ public class Game extends Canvas implements KeyListener {
 			long delta = (System.nanoTime() - last) / 1000000;
 			last = System.nanoTime();
 
-			// now this needs a bit of explaining. The amount of time
-			// passed between rendering can vary quite alot. If we were
-			// to move our player based on the normal delta it would
-			// at times jump a long distance (if the delta value got really
-			// high). So we divide the amount of time passed into segments
+			//  we divide the amount of time passed into segments
 			// of 5 milliseconds and update based on that
 			for (int i=0;i<delta / 5;i++) {
 				logic(5);
@@ -188,13 +195,14 @@ public class Game extends Canvas implements KeyListener {
 		float dy = 0;
 
         if (left) {
-			dx -= 2;
+			dx -= 2.5f;
 		}
 		if (right) {
-			dx += 2;
+			dx += 2.5f;
 		}
 		if (up) {
-            dy += -4.7;
+            //dy += -4.7;
+            dy += -7.0;
 
 		}
 		if (down) {
@@ -237,7 +245,7 @@ public class Game extends Canvas implements KeyListener {
 		}
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			up = true;
-//            player.move(0, -.9f);
+
 		}
 	}
 
