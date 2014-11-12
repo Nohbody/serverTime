@@ -20,14 +20,7 @@ public class Entity {
 	private float size = 0.3f;
 	private boolean grounded = true;
     protected int score = 0;
-	/**
-	 * Create a new entity in the game
-	 * 
-	 * @param entityImage The entityImage to represent this entity (needs to be 32x32)
-	 * @param map The map this entity is going to wander around
-	 * @param x The initial x position of this entity in grid cells
-	 * @param y The initial y position of this entity in grid cells
-	 */
+
 	public Entity(BufferedImage entityImage, Map map, float x, float y) {
 		this.entityImage = entityImage;
 		this.map = map;

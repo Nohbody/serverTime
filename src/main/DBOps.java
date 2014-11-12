@@ -1,3 +1,4 @@
+package main;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -10,14 +11,13 @@ public final class DBOps {
     static ResultSet resultSet = null;
     ResultSet workingSet = null;
     User[] users = {};
-    View[] views = {};
     int found_id = 0;
 
     public static void connect()
     {
 
     	String url = "jdbc:mysql://minazone.com:3306/";
-    	String db = "project3";
+    	String db = "project3?useUnicode=true&characterEncoding=utf8";
     	String driver = "com.mysql.jdbc.Driver";
     	String user = "guest";
     	String pass = "victini494";
@@ -36,13 +36,13 @@ public final class DBOps {
 					}
     }
 
-    public static ArrayList getData(String location, String data, String where, String column) {
+    public static ArrayList<String> getData(String location, String data, String where, String column) {
       try {
 
           String statement = "SELECT `" + column + "` FROM `" + location + "` WHERE `" + where + "` = \"" + data + "\"";
           pst = conn.prepareStatement(statement);
           resultSet = pst.executeQuery();
-          ArrayList results = new ArrayList();
+          ArrayList<String> results = new ArrayList<String>();
           while (resultSet.next())
         	  results.add(resultSet.getString(1));
           return results;
@@ -52,6 +52,23 @@ public final class DBOps {
       }
       return null;
     }
+    
+    public static ArrayList<String> getColumn(String location, String column) {
+        try {
+
+            String statement = "SELECT `" + column + "` FROM `" + location + "`";
+            pst = conn.prepareStatement(statement);
+            resultSet = pst.executeQuery();
+            ArrayList<String> results = new ArrayList<String>();
+            while (resultSet.next())
+          	  results.add(resultSet.getString(1));
+            return results;
+        }
+        catch (SQLException error) {
+            System.out.println("The state change failed. " + error.getMessage());
+        }
+        return null;
+      }
 
     public static void updateData(String location, String column, String data, String where, String condition) {
     	try {
@@ -73,7 +90,6 @@ public final class DBOps {
     public static void insertData(String location, String column, String data) {
     	try {
     		String statement = "INSERT INTO `" + location + "`(`" + column + "`) VALUES(\"" + data + "\")";
-    		System.out.println(statement);
     		pst = conn.prepareStatement(statement);
             pst.executeUpdate();
             System.out.println("Inserted data to table");

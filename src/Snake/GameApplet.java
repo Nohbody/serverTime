@@ -1,4 +1,6 @@
-package Snake.src;
+
+package Snake;
+
 
 import processing.core.*;
 

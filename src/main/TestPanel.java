@@ -1,3 +1,6 @@
+
+package main;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -11,7 +14,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 
-public class TestPanel extends JPanel{
+public class TestPanel extends JPanel
+{
 
 	private static final long serialVersionUID = 1L;
 	
