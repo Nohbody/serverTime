@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,6 +55,7 @@ public class ChatPanel extends JPanel implements Runnable{
 		messageField = new JFormattedTextField();
 			messageField.setColumns(20);
 			messageField.setText("You must log in to chat.");
+			messageField.addKeyListener(new EnterListener());
 			messageField.setEditable(false);
 		send = new JButton("Send");
 			send.addActionListener(new SendListener());
@@ -135,9 +138,23 @@ public class ChatPanel extends JPanel implements Runnable{
 			messageField.setText("");
 		}
 	}
+	
+	private class EnterListener implements KeyListener {
+
+		public void keyPressed(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER)
+				send.doClick();
+		}
+
+		public void keyReleased(KeyEvent arg0) {
+		}
+
+		public void keyTyped(KeyEvent arg0) {
+		}
+		
+	}
 
 	public void run() {
-		System.out.println("RUNNING");
 
 		if (!(DBOps.getData("info", "2", "id", "string_colour").get(0)
 				.equals(messages.get(messages.size() - 1)) && DBOps

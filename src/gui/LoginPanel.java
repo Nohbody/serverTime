@@ -13,6 +13,8 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.SwingUtilities;
 
 import main.DBOps;
 import main.Driver;
@@ -117,12 +119,12 @@ public class LoginPanel extends JPanel {
 				Driver.updateUsers();
 				String attemptName = usernameField.getText();
 				for (User u:Driver.users) {
-					if (attemptName.equals(u.getName())) {
+					if (attemptName.toLowerCase().trim().equals(u.getName().toLowerCase().trim())) {
 						found = true;
 						
 						if (passwordField.getText().equals(u.getPassword())) {
 							JOptionPane.showMessageDialog(null, "You are now logged in!");
-							Driver.currentUser = new User(attemptName, passwordField.getText());
+							Driver.currentUser = new User(u.getName(), passwordField.getText());
 							success = true;
 						}
 						else {
@@ -142,16 +144,16 @@ public class LoginPanel extends JPanel {
 				Driver.updateUsers();
 				String attemptName = usernameField.getText();
 				for (User u:Driver.users) {
-					if (attemptName.equals(u.getName())) {
+					if (attemptName.toLowerCase().trim().equals(u.getName().toLowerCase().trim())) {
 						JOptionPane.showMessageDialog(null, "This username has already been taken");
 						success = false;
 					}
 				}
 				if (success) {
 					JOptionPane.showMessageDialog(null, "Username registered!");
-					Driver.currentUser = new User(attemptName, passwordField.getText());
-					DBOps.insertData("users", "id`, `user`, `password`, `connected", 
-							((Driver.users.size() + 1) + "\",\"" + attemptName + "\", \"" + passwordField.getText() + "\", \"0"));
+					Driver.currentUser = new User(attemptName.trim(), passwordField.getText());
+					DBOps.insertData("users", "user`, `password`, `connected", 
+							attemptName + "\", \"" + passwordField.getText() + "\", \"0");
 				}
 			}
 			

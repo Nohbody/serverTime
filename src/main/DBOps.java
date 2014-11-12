@@ -17,7 +17,7 @@ public final class DBOps {
     {
 
     	String url = "jdbc:mysql://minazone.com:3306/";
-    	String db = "project3";
+    	String db = "project3?useUnicode=true&characterEncoding=utf8";
     	String driver = "com.mysql.jdbc.Driver";
     	String user = "guest";
     	String pass = "victini494";
