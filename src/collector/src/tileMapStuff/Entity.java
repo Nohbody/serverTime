@@ -1,24 +1,25 @@
 package collector.src.tileMapStuff;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  */
 public class Entity {
 	/** The x position of this entity in terms of grid cells */
-	private float x;
+	protected float x;
 	/** The y position of this entity in terms of grid cells */
-	private float y;
+	protected float y;
 	/** The entityImage to draw for this entity */
-	private Image entityImage;
+	protected BufferedImage entityImage;
 	/** The map which this entity is wandering around */
-	private Map map;
+	protected Map map;
 	/** The angle to draw this entity at */
-	private float ang;
+	protected float ang;
 	/** The size of this entity, this is used to calculate collisions with walls */
 	private float size = 0.3f;
-	
+	private boolean grounded = true;
+    protected int score = 0;
 	/**
 	 * Create a new entity in the game
 	 * 
@@ -27,22 +28,19 @@ public class Entity {
 	 * @param x The initial x position of this entity in grid cells
 	 * @param y The initial y position of this entity in grid cells
 	 */
-	public Entity(Image entityImage, Map map, float x, float y) {
+	public Entity(BufferedImage entityImage, Map map, float x, float y) {
 		this.entityImage = entityImage;
 		this.map = map;
 		this.x = x;
 		this.y = y;
 	}
-	
-	/**
-	 * Move this entity a given amount. This may or may not succeed depending
-	 * on collisions
-	 * 
-	 * @param dx The amount to move on the x axis
-	 * @param dy The amount to move on the y axis
-	 * @return True if the move succeeded
-	 */
-	public boolean move(float dx, float dy) {
+
+
+    public void setScore(int add)
+    {
+        this.score += add;
+    }
+    public boolean move(float dx, float dy) {
 		// work out what the new position of this entity will be
 		float nx = x + dx;
 		float ny = y + dy;
@@ -53,8 +51,14 @@ public class Entity {
 			// if it doesn't then change our position to the new position
 			x = nx;
 			y = ny;
-			
-			// and calculate the angle we're facing based on our last move
+			if (map.isCoin(x, y))
+            {
+                map.setClear((int)x, (int)y);
+                setScore(1);
+                System.out.println(score);
+
+            }
+            // and calculate the angle we're facing based on our last move
 			ang = (float) (Math.atan2(dy, dx) - (Math.PI / 2));
 			return true;
 		}
@@ -84,17 +88,24 @@ public class Entity {
 			return false;
 		}
 		if (map.isBlocked(nx - size, ny + size)) {
-			return false;
+			grounded = true;
+            return false;
 		}
 		if (map.isBlocked(nx + size, ny + size)) {
-			return false;
+			grounded = true;
+            return false;
 		}
 		
 		// if all the points checked are unblocked then we're in an ok
 		// location
 		return true;
 	}
-	
+	// check to see if Entity is grounded
+    public boolean isGrounded()
+    {
+        return grounded;
+    }
+
 	/**
 	 * Draw this entity to the graphics context provided.
 	 * 

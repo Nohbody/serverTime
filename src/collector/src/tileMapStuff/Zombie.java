@@ -4,14 +4,13 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 
 public class Zombie extends Entity
 {
     private int health;
     private static BufferedImage zombie;
-    private int damage = 0;
+
     private float x = 0f;
     private float y = 0f;
     private float gravity = 0.5f;
@@ -112,39 +111,17 @@ public class Zombie extends Entity
         }
     }
 
-    public boolean isHit(int zombieX, int zombieY, int princeX, int princeY, int princeW, int princeH)
-    {
-        if ((princeX + princeW > zombieX && (princeX + princeW) < (zombieX + zombie.getWidth()))
-                && (princeY + princeH > zombieY && (princeY + princeH) < (zombieY + zombie.getHeight())))
-        {
-
-            Random randTron = new Random();
-            System.out.println(" zombie hit");
-            return true;
-        }
-
-        return false;
-    }
 
     public void moveX(int change)
     {
         velocityX *= change;
     }
     /**
-     * @return the damage
+     * @return the score
      */
-    public int getDamage()
-    {
-        return damage;
-    }
 
-    /**
-     * @param damage the damage to set
-     */
-    public void setDamage(int damage)
-    {
-        this.damage = damage;
-    }
+
+
 
     //jump and method to keep jumps controlled how long you hold down the jump
     public void jump()

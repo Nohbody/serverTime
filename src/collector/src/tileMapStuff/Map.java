@@ -23,7 +23,7 @@ public class Map
      * The value indicating a isBlocked cell
      */
     private static final int BLOCKED = 1;
-
+    private static final int COIN = 2;
     /**
      * The width in grid cells of our map
      */
@@ -49,9 +49,9 @@ public class Map
                     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
                     {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
                     {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+                    {1, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 1},
                     {1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
+                    {1, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
                     {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
                     {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
                     {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
@@ -59,14 +59,14 @@ public class Map
                     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
                     {1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1},
                     {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1},
-                    {1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1},
+                    {1, 0, 0, 0, 2, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1},
                     {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1},
                     {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1},
                     {1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1},
                     {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1},
                     {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1},
                     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
+                    {1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
                     {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1},
                     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
                     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
@@ -141,7 +141,11 @@ public class Map
                         g.setColor(Color.blue);
                     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 }
-
+                if (data[x][y] == COIN)
+                {
+                    g.setColor(Color.GREEN);
+                    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE/2, TILE_SIZE/2);
+                }
             }
         }
     }
@@ -156,5 +160,16 @@ public class Map
         // look up the right cell (based on simply rounding the floating
         // values) and check the value
         return data[(int) x][(int) y] == BLOCKED;
+    }
+    public boolean isCoin(float x, float y)
+    {
+        // look up the right cell (based on simply rounding the floating
+        // values) and check the value
+        return data[(int) x][(int) y] == COIN;
+    }
+
+    public void setClear(int x, int y)
+    {
+        data[x][y]= CLEAR;
     }
 }
