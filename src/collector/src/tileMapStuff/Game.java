@@ -3,7 +3,6 @@ package collector.src.tileMapStuff;
 import collector.src.dbStuff.collectListener;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -91,11 +90,11 @@ public class Game extends Canvas implements KeyListener {
 		Frame frame = new Frame("Tile tileMapStuff.Map Example");
 		frame.setLayout(null);
 		setBounds(0,0,1000,620);
-        JPanel panel = new JPanel();
-        panel.add(this);
+//        JPanel panel = new JPanel();
+//        panel.add(this);
 
 
-        frame.add(panel);
+        frame.add(this);
 		frame.setSize(1000,620);
 		frame.setResizable(false);
 
