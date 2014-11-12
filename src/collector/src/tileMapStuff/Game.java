@@ -65,7 +65,7 @@ public class Game extends Canvas implements KeyListener {
 		try {
 			URL url = Thread.currentThread().getContextClassLoader().getResource("collector/src/PNG/spaceShip.png");
 			if (url == null) {
-				System.err.println("Unable to find sprite: res/sprite.gif");
+				System.err.println("Unable to find sprite: res/space shit.gif");
 				System.exit(0);
 			}
 		    sprite = ImageIO.read(url);
