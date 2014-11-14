@@ -139,7 +139,7 @@ public class Zombie extends Entity
 
     public float getX()
     {
-        return this.x;
+        return super.x;
     }
 
     public void setX(int newX)
@@ -149,7 +149,7 @@ public class Zombie extends Entity
 
     public float getY()
     {
-        return this.y;
+        return super.y;
     }
 
     public void setY(int newY)

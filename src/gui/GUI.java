@@ -24,8 +24,9 @@ public class GUI extends JPanel{
 	public GridBagLayout gLayout;
 	public GridBagConstraints c;
 	private ScheduledThreadPoolExecutor poolExecutor;
-	
-	public GUI() throws ParseException, BadLocationException {
+    //public Game collector;
+
+    public GUI() throws ParseException, BadLocationException {
 		// Initialize components
 		title = new JLabel("Server Time");
 			title.setFont(new Font("Arial Black", Font.PLAIN, 72));
@@ -36,7 +37,18 @@ public class GUI extends JPanel{
 				title.setOpaque(true);
 		gLayout = new GridBagLayout();
 			c = new GridBagConstraints();
-		mainPanel = new LoginPanel();
+
+        //this is the panel to collector game to whence its picked
+//        try
+//        {
+//            collector = new Game();
+//        } catch (FileNotFoundException e)
+//        {
+//            e.printStackTrace();
+//        }
+
+        mainPanel = new LoginPanel();
+
 			mainPanel.setBackground(Color.BLACK);
 		chatPanel = new ChatPanel();
 			chatPanel.setBackground(Color.BLACK);
@@ -63,7 +75,8 @@ public class GUI extends JPanel{
 		c.weighty = .6;
 		c.gridx = 0;
 		c.gridy = 1;
-		add(mainPanel,c);
+        //add(collector, c);
+        add(mainPanel,c);
 		
 		c.fill = GridBagConstraints.BOTH;
 		c.weighty = 0;

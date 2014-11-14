@@ -42,7 +42,6 @@ public class Game extends Canvas implements KeyListener
     private Zombie player;
     private ArrayList<Coin> coins = new ArrayList<Coin>();
     Coin myCoin = new Coin(coinSprite, map, 60, 60 );
-
     private float gravity = 0.08f;
     collectListener dataListener;
     ScheduledThreadPoolExecutor poolExecutor;
@@ -178,7 +177,23 @@ public class Game extends Canvas implements KeyListener
             // flip the buffer so we can see the rendering
             g.dispose();
             strategy.show();
-
+            //hers some stuff to check which coin is the closest to the player
+            coins = map.getCoinList();
+            float currlow = 1000;
+            float currX = 0;
+            float currY = 0;
+            for (Coin c : coins)
+            {
+                float currDist = c.proximity(player.getX(), player.getY());
+                if (currDist < currlow)
+                {
+                    currlow = currDist;
+                    currX = c.getX();
+                    currY = c.getY();
+                    System.out.println("this is the currDist " + currlow);
+                }
+            }
+            map.setClosest((int) currX, (int) currY);
             // pause a bit so that we don't choke the system
             try
             {

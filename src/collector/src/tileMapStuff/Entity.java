@@ -28,7 +28,26 @@ public class Entity {
 		this.y = y;
 	}
 
+    public float getX()
+    {
+        return x;
+    }
 
+    public float getY()
+    {
+        return y;
+    }
+
+    public Entity(float x, float y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+    //proximity detection for
+    public int proximity()
+    {
+        return 0;
+    }
     public void setScore(int add)
     {
         this.score += add;

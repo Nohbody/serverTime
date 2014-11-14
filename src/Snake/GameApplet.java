@@ -17,7 +17,9 @@ public class GameApplet extends PApplet {
 	int score;
 	int score2;
 	boolean gameOver;
-
+    static public void main(String args[]) {
+        PApplet.main(new String[] { "Snake.GameApplet" });
+    }
 	public void setup() {
 	  size(600, 600);
 	  background(0);

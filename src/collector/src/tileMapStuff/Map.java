@@ -2,6 +2,8 @@ package collector.src.tileMapStuff;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * The map holds the data about game area. In this case its responsible
@@ -24,6 +26,7 @@ public class Map
      */
     private static final int BLOCKED = 1;
     private static final int COIN = 2;
+    private static final int CLOSEST = 5;
     /**
      * The width in grid cells of our map
      */
@@ -54,7 +57,7 @@ public class Map
                     {1, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
                     {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
                     {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
+                    {1, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
                     {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
                     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
                     {1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1},
@@ -62,7 +65,7 @@ public class Map
                     {1, 0, 0, 0, 2, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1},
                     {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1},
                     {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1},
+                    {1, 0, 2, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1},
                     {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1},
                     {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1},
                     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
@@ -75,7 +78,7 @@ public class Map
 
             };
 
-
+    public ArrayList<Coin> coinList = new ArrayList<Coin>();
     public static String color;
 
     /**
@@ -101,6 +104,11 @@ public class Map
 //            br.close();
 //        }
 
+    }
+
+    public ArrayList<Coin> getCoinList()
+    {
+        return coinList;
     }
 
     /**
@@ -142,10 +150,19 @@ public class Map
                     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 }
                 if (data[x][y] == COIN)
+            {
+                coinList.add(new Coin(x, y));
+                g.setColor(Color.GREEN);
+                g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE / 2, TILE_SIZE / 2);
+
+            }
+                if (data[x][y] == CLOSEST)
                 {
-                    g.setColor(Color.GREEN);
-                    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE/2, TILE_SIZE/2);
+                    g.setColor(Color.RED);
+                    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE / 2, TILE_SIZE / 2);
+
                 }
+
             }
         }
     }
@@ -165,11 +182,33 @@ public class Map
     {
         // look up the right cell (based on simply rounding the floating
         // values) and check the value
-        return data[(int) x][(int) y] == COIN;
+
+        return data[(int) x][(int) y] == COIN || data[(int) x][(int) y] == CLOSEST ;
     }
 
     public void setClear(int x, int y)
     {
         data[x][y]= CLEAR;
+        resetCoin();
+    }
+
+    public void setClosest(int x, int y)
+    {
+        data[x][y] = CLOSEST;
+    }
+    //method to replace the coin in a new and random space
+    public void resetCoin()
+    {
+        Random rand = new Random();
+        int x = rand.nextInt(WIDTH);
+        int y = rand.nextInt(HEIGHT);
+        if (data[x][y] != BLOCKED)
+        {
+            data[x][y] = COIN;
+        }
+        if (data[x][y] == BLOCKED)
+        {
+            resetCoin();
+        }
     }
 }

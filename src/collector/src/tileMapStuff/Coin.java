@@ -20,6 +20,12 @@ public class Coin extends Entity
     {
         super(entityImage, map, x, y);
     }
+
+    public Coin(float x, float y)
+    {
+        super(x, y);
+
+    }
     public void paint(Graphics2D g) {
         // work out the screen position of the entity based on the
         // x/y position and the size that tiles are being rendered at. So
@@ -33,5 +39,15 @@ public class Coin extends Entity
 
         g.drawImage(entityImage, (int) (xp), (int) (yp), null);
 
+    }
+
+    //proximity detection
+    public float proximity(float x, float y)
+    {
+        float distance = 0;
+        distance = (float) Math.sqrt(Math.pow((this.x - x), 2)+Math.pow((this.y -y), 2));
+
+
+        return distance;
     }
 }
