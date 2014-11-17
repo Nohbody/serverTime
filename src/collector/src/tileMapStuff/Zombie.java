@@ -1,9 +1,6 @@
 package collector.src.tileMapStuff;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 
 public class Zombie extends Entity
@@ -11,43 +8,25 @@ public class Zombie extends Entity
     private int health;
     private static BufferedImage zombie;
 
-    private float x = 0f;
-    private float y = 0f;
+    private int x = 0;
+    private int y = 0;
     private float gravity = 0.5f;
     private float velocityX = 5f, velocityY = 0f;
     private boolean grounded = true;
-    BufferedImage zombieImg;
-    BufferedImage zombieRight;
+
 
     public Zombie(BufferedImage image, Map map, float x, float y) {
         super(image, map, x, y);
 
     }
-    public Zombie(BufferedImage zombieImg, Map map, float x, float y, int health)
+
+
+    public Zombie( Map map, float x, float y)
 
     {
-        super(zombieImg, map, x,y);
-        //these where change to .setZombie when i automated the get/set it changed from
-        //this. what are the differences?
-        this.zombieImg = zombieImg;
-        this.health = health;
-        try
-        {
-             BufferedImage zombieLeft = ImageIO.read(new File("zombieImg.png"));
-            System.out.println("we found the zombieImg");
-        } catch (IOException e)
-        {
-            System.out.println("we cant find that image");
-        }
-        //get zombieImg facing right
-        try
-        {
-            BufferedImage zombieRight = ImageIO.read(new File("PNG/heroLeft.png"));
-            System.out.println("we found the zombieImg");
-        } catch (IOException e)
-        {
-            System.out.println("we cant find that image");
-        }
+        super( map, x,y);
+
+
 
     }
 
@@ -70,44 +49,33 @@ public class Zombie extends Entity
     }
 
     /**
-     * @return the zombie
+     * @return the player
      */
     public BufferedImage getZombie()
     {
         return zombie;
     }
 
-    //set that image
-    public void setZombie(BufferedImage zombie)
-    {
-        this.zombieImg = zombieImg;
-    }
 
-    //if the price touches the zombie/mummie which i feel like is sort of a
+
+    //if the price touches the player/mummie which i feel like is sort of a
     //square is a rectange type situation
     public void update()
     {
         this.x += velocityX ;
         this.y += velocityY;
         velocityY += gravity;
-        if (this.y > 720.0f - zombieImg.getHeight())
+        if (this.y > 720.0f)
         {
-            this.y = 720.0f - zombieImg.getHeight();
+
             velocityY = 0;
             grounded = true;
 
         }
-        if (this.x >= 1260 - zombie.getWidth() || this.x <= 0)
+        if (this.x >= 1260 || this.x <= 0)
         {
             velocityX *= -1;
-//            if (this.x >= 1260)
-//            {
-//                this.setZombie(zombieLeft);
-//            }
-//            if (this.x <= 0)
-//            {
-//                this.setZombie(zombieRight);
-//            }
+
         }
     }
 
@@ -142,18 +110,10 @@ public class Zombie extends Entity
         return super.x;
     }
 
-    public void setX(int newX)
-    {
-        this.x = newX;
-    }
 
     public float getY()
     {
         return super.y;
     }
 
-    public void setY(int newY)
-    {
-        this.y = newY;
-    }
 }

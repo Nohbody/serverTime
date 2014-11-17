@@ -1,159 +1,58 @@
-package collector.src.tileMapStuff;
-
-import collector.src.dbStuff.collectListener;
-
-import javax.imageio.ImageIO;
+package collector.src.tileMapStuff;//Chris Murphy
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.Random;
 
-/**
- * based on some stuff i read on cokeandcode.com
- */
-public class Game extends Canvas implements KeyListener
+//sept 2013
+//purpose: a main panel for the player and prince to do battle
+
+
+public class Game extends JPanel
 {
-    private BufferedImage sprite;
-    private BufferedImage backgroundSprite, coinSprite;
+	private ImageIcon zombieImage,  zombieImageRight, princeImage, flameIcon, flameIconRight;
+	//random thing stuff
+	Random randTron = new Random();
+	private final int height = 600;
+	private final int length = 1000;
 
-    private BufferStrategy strategy;
+    private Color myPurp = new Color(150, 0, 220);
 
-    private boolean left;
+	private boolean zombieMoveRight = true;
+	//timer
+	private Timer timer, healthTimer;
+	private final int timerInt = 5;
 
-    private boolean right;
-
-    private boolean up;
-
-    private boolean down;
-
-    private Map map;
-    /**
-     * The player entity that will be controlled with cursors
-     */
-    private Zombie player;
+	private final int moveInt = 8;
+	//lable for the life of these guys
+	private JLabel zombieLbl = new JLabel("im the player: health");
+//booleas for which key is pressed
+    boolean up = false;
+    boolean down = false;
+    boolean right = false;
+    boolean left = false;
+//some more stuff that im adding from the game canvas
+Map map = new Map();
     private ArrayList<Coin> coins = new ArrayList<Coin>();
-    Coin myCoin = new Coin(coinSprite, map, 60, 60 );
+    Coin myCoin = new Coin( map, 60, 60);
     private float gravity = 0.08f;
-    collectListener dataListener;
-    ScheduledThreadPoolExecutor poolExecutor;
 
-    /**
-     * Create the simple game - this also starts the game loop
-     */
-    public Game() throws FileNotFoundException
-    {
+    Zombie player = new Zombie(map, 50f, 50f);
 
-        //our DataBase connection
-        collector.src.dbStuff.dbCollectConnect.connect();
-        //adding a runnable dataListener class to our poolExecutor
-        dataListener = new collectListener();
-        poolExecutor = new ScheduledThreadPoolExecutor(1);
-        poolExecutor.scheduleAtFixedRate(dataListener, (long) 100, (long) 100, TimeUnit.MILLISECONDS);
+    //constructor
+	public Game()
+	{
+		addKeyListener (new DirectionListener());
+		//image declorations
+        //gameLoop();
+        setBackground(Color.black);
+		setPreferredSize (new  Dimension(length, height));
+		setFocusable(true);
 
-        try
-        {
-            URL url = Thread.currentThread().getContextClassLoader().getResource("collector/src/PNG/coin.png");
-            if (url == null)
-            {
-                System.err.println("Unable to find sprite: res/space shit.gif");
-                System.exit(0);
-            }
-            coinSprite = ImageIO.read(url);
-        } catch (IOException e)
-        {
-            System.err.println("Unable to load sprite: res/sprite.gif");
-            System.exit(0);
-        }
-        try
-        {
-            URL url = Thread.currentThread().getContextClassLoader().getResource("collector/src/PNG/spaceShip.png");
-            if (url == null)
-            {
-                System.err.println("Unable to find sprite: res/space shit.gif");
-                System.exit(0);
-            }
-            sprite = ImageIO.read(url);
-        } catch (IOException e)
-        {
-            System.err.println("Unable to load sprite: res/sprite.gif");
-            System.exit(0);
-        }
-        //get a background image
-        try
-        {
-            URL url = Thread.currentThread().getContextClassLoader().getResource("collector/src/PNG/backGround.png");
-            if (url == null)
-            {
-                System.err.println("Unable to find sprite: res/sprite.gif");
-                System.exit(0);
-            }
-            backgroundSprite = ImageIO.read(url);
-        } catch (IOException e)
-        {
-            System.err.println("Unable to load sprite: res/sprite.gif");
-            System.exit(0);
-        }
-
-        Frame frame = new Frame("collector");
-        frame.setLayout(null);
-        setBounds(0, 0, 1000, 620);
-
-        frame.add(this);
-        frame.setSize(1000, 620);
-        frame.setResizable(false);
-
-        // add a listener to respond to the window closing so we can
-        // exit the game
-        frame.addWindowListener(new WindowAdapter()
-        {
-            public void windowClosing(WindowEvent e)
-            {
-                System.exit(0);
-            }
-        });
-        frame.addKeyListener(this);
-        addKeyListener(this);
-
-        // show the frame before creating the buffer strategy!
-        frame.setVisible(true);
-
-        // create the strategy used for accelerated rendering. More details
-        // in the space invaders 2D tutorial
-        createBufferStrategy(2);
-        strategy = getBufferStrategy();
-
-        // create our game objects, a map for the player to wander around
-        // and an entity to represent out player
-        try
-        {
-            map = new Map();
-        } catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        player = new Zombie(sprite, map, 1.5f, 1.5f);
-
-        // start the game loop
-        gameLoop();
     }
 
-    /**
-     * The game loop handles the basic rendering and tracking of time. Each
-     * loop it calls off to the game logic to perform the movement and
-     * collision checking.
-     */
     public void gameLoop()
     {
         boolean gameRunning = true;
@@ -164,20 +63,6 @@ public class Game extends Canvas implements KeyListener
         {
             player.move(0, gravity);
 
-            Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
-
-            // clear the screen and this picture
-            g.drawImage(backgroundSprite, 0, 0, null);
-            // render our game objects
-            g.translate(0, 20);
-            map.paint(g);
-            player.paint(g);
-            myCoin.paint(g);
-
-            // flip the buffer so we can see the rendering
-            g.dispose();
-            strategy.show();
-            //hers some stuff to check which coin is the closest to the player
             coins = map.getCoinList();
             float currlow = 1000;
             float currX = 0;
@@ -190,9 +75,10 @@ public class Game extends Canvas implements KeyListener
                     currlow = currDist;
                     currX = c.getX();
                     currY = c.getY();
-                    System.out.println("this is the currDist " + currlow);
+
                 }
             }
+
             map.setClosest((int) currX, (int) currY);
             // pause a bit so that we don't choke the system
             try
@@ -200,17 +86,20 @@ public class Game extends Canvas implements KeyListener
                 Thread.sleep(4);
             } catch (Exception e)
             {
+                System.out.println("we can't sleep, the Thread is not slowing down");
             }
             // calculate how long its been since we last ran the
             // game logic
             long delta = (System.nanoTime() - last) / 1000000;
             last = System.nanoTime();
-
+            System.out.println(delta);
             //  we divide the amount of time passed into segments
             // of 5 milliseconds and update based on that
+            repaint();
             for (int iFor = 0; iFor < delta / 5; iFor++)
             {
                 logic(5);
+                System.out.println("logic sucks");
             }
             // after we've run through the segments if there is anything
             // left over we update for that
@@ -220,13 +109,8 @@ public class Game extends Canvas implements KeyListener
             }
         }
     }
-
-    /**
-     * Our game logic method - for this example purpose this is very
-     * simple. Check the keyboard, and attempt to move the player
-     *
-     * @param delta The amount of time to update for (in milliseconds)
-     */
+	//logic does some stuff to move our player this will become mor complicated
+    //shortly
     public void logic(long delta)
     {
         // check the keyboard and record which way the player
@@ -237,6 +121,7 @@ public class Game extends Canvas implements KeyListener
         if (left)
         {
             dx -= 2.5f;
+            setBackground(new Color(23,44,124));
         }
         if (right)
         {
@@ -246,11 +131,15 @@ public class Game extends Canvas implements KeyListener
         {
             //dy += -4.7;
             dy += -7.0;
+            System.out.println("we are not jumping");
 
         }
         if (down)
         {
             dy += 1;
+            System.out.println("down is true");
+
+
         }
 
         // if the player needs to move attempt to move the entity
@@ -263,73 +152,91 @@ public class Game extends Canvas implements KeyListener
         }
     }
 
-    public void keyTyped(KeyEvent e)
-    {
-    }
+	//apperantly this repaints my image  i am going to need this explained to me a bit
+	public void paintComponent(Graphics page)
+	{
+		super.paintComponent(page);
 
-    /**
-     * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
-     */
-    public void keyPressed(KeyEvent e)
-    {
-        // check the keyboard and record which keys are pressed
-        if (e.getKeyCode() == KeyEvent.VK_LEFT)
-        {
-            left = true;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-        {
-            right = true;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_DOWN)
-        {
-            down = true;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_UP)
-        {
-            up = true;
+        page.setColor(myPurp);
+        page.fillRect(23, 55, 453, 345);
+        map.paint(page);
+        player.paint(page);
+        //to basic of code just to chec
+		page.drawString("player what: ", 5,
+				(height - 10));
+		zombieLbl.setText("im the player: where do i print?");
+		page.drawString("pricne health: ", 150,
+				(height - 10));
+	}
 
-        }
-    }
 
-    /**
-     * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
-     */
-    public void keyReleased(KeyEvent e)
-    {
-        // check the keyboard and record which keys are released
-        if (e.getKeyCode() == KeyEvent.VK_LEFT)
-        {
-            left = false;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-        {
-            right = false;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_DOWN)
-        {
-            down = false;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_UP)
-        {
-            up = false;
 
-        }
-    }
+    // key listener
+	public class DirectionListener implements KeyListener
+	{
+        /**
+         * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
+         */
+        public void keyPressed(KeyEvent e)
+        {
+            // check the keyboard and record which keys are pressed
+            if (e.getKeyCode() == KeyEvent.VK_LEFT)
+            {
+                left = true;
+                setBackground(new Color(203,44,124));
+            }
+            if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+            {
+                right = true;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_DOWN)
+            {
+                down = true;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_UP)
+            {
+                up = true;
 
-    /**
-     * The entry point to our example code
-     *
-     * @param argv The arguments passed into the program
-     */
-    public static void main(String[] argv)
-    {
-        try
-        {
-            new Game();
-        } catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
+            }
         }
-    }
+
+        /**
+         * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
+         */
+        public void keyReleased(KeyEvent e)
+        {
+            // check the keyboard and record which keys are released
+            if (e.getKeyCode() == KeyEvent.VK_LEFT)
+            {
+                left = false;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+            {
+                right = false;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_DOWN)
+            {
+                down = false;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_UP)
+            {
+                up = false;
+            }
+        }
+
+		public void keyTyped(KeyEvent event)
+		{
+
+			if (event.getKeyCode() == KeyEvent.VK_LEFT
+					|| event.getKeyCode() == (KeyEvent.VK_A + KeyEvent.VK_SPACE))
+			{
+				zombieMoveRight = false;
+				setBackground(new Color(45, 21, 34));
+			}
+
+		}
+	}
 }
+
+
+

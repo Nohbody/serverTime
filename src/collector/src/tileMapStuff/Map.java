@@ -1,7 +1,6 @@
 package collector.src.tileMapStuff;
 
 import java.awt.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -84,7 +83,7 @@ public class Map
     /**
      * Create a new map with some default contents
      */
-    public Map() throws IOException
+    public Map()
     {
 //   will get this to work so we can impliment a level editor
 
@@ -118,7 +117,7 @@ public class Map
      * @param g The graphics context on which to draw the map
      */
 
-    public void paint(Graphics2D g)
+    public void paint(Graphics g)
     {
         // loop through all the tiles in the map rendering them
         // based on whether they block or not
@@ -133,25 +132,25 @@ public class Map
                 if (data[x][y] == BLOCKED)
                 {
 
-                    if (color.equals("RED"))
-                        g.setColor(Color.RED);
-                    else if (color.equals("BLACK"))
-                    {
-                        g.setColor(Color.BLACK);
-
-                    } else if (color.equals("GREEN"))
-                    {
-                        g.setColor(Color.GREEN);
-
-                    } else if (color.equals("CYAN"))
-                        g.setColor(Color.CYAN);
-                    else
+//                    if (color.equals("RED"))
+//                        g.setColor(Color.RED);
+//                    else if (color.equals("BLACK"))
+//                    {
+//                        g.setColor(Color.BLACK);
+//
+//                    } else if (color.equals("GREEN"))
+//                    {
+//                        g.setColor(Color.GREEN);
+//
+//                    } else if (color.equals("CYAN"))
+//                        g.setColor(Color.CYAN);
+//                    else
                         g.setColor(Color.blue);
                     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 }
                 if (data[x][y] == COIN)
             {
-                coinList.add(new Coin(x, y));
+                coinList.add(new Coin(this, x, y));
                 g.setColor(Color.GREEN);
                 g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE / 2, TILE_SIZE / 2);
 
@@ -160,7 +159,7 @@ public class Map
                 {
                     g.setColor(Color.RED);
                     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE / 2, TILE_SIZE / 2);
-
+                    System.out.println("we found a closest");
                 }
 
             }

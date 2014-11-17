@@ -58,7 +58,10 @@ public class GUI extends JPanel{
 		poolExecutor.scheduleAtFixedRate(chatPanel, (long) 1000, (long) 1000, TimeUnit.MILLISECONDS);
 		
 		// Set panel settings
-		setPreferredSize(new Dimension(500, 600));
+        /**might need to mess with some of this size stuff
+         *
+         */
+        setPreferredSize(new Dimension(500, 600));
 		setLayout(gLayout);
 		setBorder(BorderFactory.createLineBorder(Color.MAGENTA, 2));
 		setBackground(Color.BLACK);

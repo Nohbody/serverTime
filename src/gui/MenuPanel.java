@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
 
 /* *************************************************************
 File Name: MenuPanel.java
@@ -59,14 +58,8 @@ public class MenuPanel extends JPanel implements ActionListener{
 
             if (game == null)
             {
-                try
-                {
-                    game = new Game();
-                    add(game);
-                } catch (FileNotFoundException e1)
-                {
-                    e1.printStackTrace();
-                }
+                game = new Game();
+                add(game);
             }
         }
     }

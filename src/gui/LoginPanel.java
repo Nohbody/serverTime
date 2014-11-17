@@ -150,8 +150,12 @@ public class LoginPanel extends JPanel {
 				Driver.newPanel.mainPanel.setLayout(new FlowLayout());
 				Driver.newPanel.mainPanel.removeAll();
 				Driver.newPanel.mainPanel.setPreferredSize(null);
-				Driver.newPanel.mainPanel.add(new MenuPanel());
-				
+				MenuPanel mp= new MenuPanel();
+                Driver.newPanel.mainPanel.add(mp);
+                /**this is where i need to add the new panel
+                 *
+                 */
+				Driver.newPanel.mainPanel.remove(mp);
 				Driver.newPanel.chatPanel.messageField.setText("");
 				Driver.newPanel.chatPanel.messageField.setEditable(true);
 				Driver.newPanel.chatPanel.send.setEnabled(true);
