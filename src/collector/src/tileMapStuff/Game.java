@@ -177,27 +177,52 @@ Map map = new Map();
         /**
          * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
          */
+        float dx = 0;
+        float dy = 0;
+        long last = System.nanoTime();
+        long delta = (System.nanoTime() - last) / 1000000;
         public void keyPressed(KeyEvent e)
         {
             // check the keyboard and record which keys are pressed
             if (e.getKeyCode() == KeyEvent.VK_LEFT)
             {
                 left = true;
+                dx -= 2.5f;
                 setBackground(new Color(203,44,124));
+
+
+                repaint();
             }
             if (e.getKeyCode() == KeyEvent.VK_RIGHT)
             {
+                dx += 2.5f;
                 right = true;
+                setBackground(new Color(20,44,124));
+
             }
             if (e.getKeyCode() == KeyEvent.VK_DOWN)
             {
+                dy += 1;
                 down = true;
+                setBackground(new Color(203,44,14));
+
             }
             if (e.getKeyCode() == KeyEvent.VK_UP)
             {
                 up = true;
+                dy += -7.0;
+                setBackground(new Color(23,234,124));
+
 
             }
+
+            if ((dx != 0) || (dy != 0))
+            {
+                player.move(dx * delta * 0.003f,
+                        dy * delta * 0.003f);
+                repaint();
+            }
+
         }
 
         /**
