@@ -1,12 +1,26 @@
 package gui;
 
-import javax.swing.*;
-import javax.swing.border.MatteBorder;
-import javax.swing.text.BadLocationException;
-import java.awt.*;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
 import java.text.ParseException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.MatteBorder;
+import javax.swing.text.BadLocationException;
+
 
 /* *************************************************************
  File Name: GUI.java
@@ -24,9 +38,10 @@ public class GUI extends JPanel{
 	public GridBagLayout gLayout;
 	public GridBagConstraints c;
 	private ScheduledThreadPoolExecutor poolExecutor;
-    //public Game collector;
 
-    public GUI() throws ParseException, BadLocationException {
+	
+	public GUI() throws ParseException, BadLocationException {
+
 		// Initialize components
 		title = new JLabel("Server Time");
 			title.setFont(new Font("Arial Black", Font.PLAIN, 72));
@@ -38,16 +53,8 @@ public class GUI extends JPanel{
 		gLayout = new GridBagLayout();
 			c = new GridBagConstraints();
 
-        //this is the panel to collector game to whence its picked
-//        try
-//        {
-//            collector = new Game();
-//        } catch (FileNotFoundException e)
-//        {
-//            e.printStackTrace();
-//        }
 
-        mainPanel = new LoginPanel();
+		mainPanel = new LoginPanel();
 
 			mainPanel.setBackground(Color.BLACK);
 		chatPanel = new ChatPanel();
@@ -57,11 +64,9 @@ public class GUI extends JPanel{
 		poolExecutor = new ScheduledThreadPoolExecutor(1);
 		poolExecutor.scheduleAtFixedRate(chatPanel, (long) 1000, (long) 1000, TimeUnit.MILLISECONDS);
 		
-		// Set panel settings
-        /**might need to mess with some of this size stuff
-         *
-         */
-        setPreferredSize(new Dimension(500, 600));
+
+		setPreferredSize(new Dimension(500, 600));
+
 		setLayout(gLayout);
 		setBorder(BorderFactory.createLineBorder(Color.MAGENTA, 2));
 		setBackground(Color.BLACK);
@@ -78,8 +83,9 @@ public class GUI extends JPanel{
 		c.weighty = .6;
 		c.gridx = 0;
 		c.gridy = 1;
-        //add(collector, c);
-        add(mainPanel,c);
+
+		add(mainPanel,c);
+
 		
 		c.fill = GridBagConstraints.BOTH;
 		c.weighty = 0;

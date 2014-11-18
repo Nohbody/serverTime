@@ -38,7 +38,9 @@ public class Map
     /**
      * The rendered size of the tile (in pixels)
      */
-    public static final int TILE_SIZE = 40;
+
+    public static final int TILE_SIZE = 18;
+
 
     /**
      * The actual data for our map

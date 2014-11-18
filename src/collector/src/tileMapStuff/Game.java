@@ -1,6 +1,11 @@
 package collector.src.tileMapStuff;//Chris Murphy
 import javax.swing.*;
+
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -15,8 +20,10 @@ public class Game extends JPanel
 	private ImageIcon zombieImage,  zombieImageRight, princeImage, flameIcon, flameIconRight;
 	//random thing stuff
 	Random randTron = new Random();
-	private final int height = 600;
-	private final int length = 1000;
+
+	private final int height = 270;
+	private final int length = 450;
+
 
     private Color myPurp = new Color(150, 0, 220);
 
@@ -26,8 +33,8 @@ public class Game extends JPanel
 	private final int timerInt = 5;
 
 	private final int moveInt = 8;
-	//lable for the life of these guys
-	private JLabel zombieLbl = new JLabel("im the player: health");
+
+
 //booleas for which key is pressed
     boolean up = false;
     boolean down = false;
@@ -39,75 +46,81 @@ Map map = new Map();
     Coin myCoin = new Coin( map, 60, 60);
     private float gravity = 0.08f;
 
-    Zombie player = new Zombie(map, 50f, 50f);
+
+    Zombie player = new Zombie(map, 100f, 100f);
 
     //constructor
 	public Game()
 	{
 		addKeyListener (new DirectionListener());
 		//image declorations
-        //gameLoop();
+
         setBackground(Color.black);
 		setPreferredSize (new  Dimension(length, height));
 		setFocusable(true);
-
+		
+		Timer myTimer = new Timer(10, new GameLoop());
+		myTimer.start();
+		
+		player.move(0, gravity);
     }
 
-    public void gameLoop()
+    private class GameLoop implements ActionListener
     {
-        boolean gameRunning = true;
-        long last = System.nanoTime();
+        
+			public void actionPerformed(ActionEvent arg0) {
+				long last = System.nanoTime();
 
-        // keep looking while the game is running
-        while (gameRunning)
-        {
-            player.move(0, gravity);
+				requestFocus();
+		        // keep looking while the game is running
 
-            coins = map.getCoinList();
-            float currlow = 1000;
-            float currX = 0;
-            float currY = 0;
-            for (Coin c : coins)
-            {
-                float currDist = c.proximity(player.getX(), player.getY());
-                if (currDist < currlow)
-                {
-                    currlow = currDist;
-                    currX = c.getX();
-                    currY = c.getY();
+		            coins = map.getCoinList();
+		            float currlow = 1000;
+		            float currX = 0;
+		            float currY = 0;
+		            for (Coin c : coins)
+		            {
+		                float currDist = c.proximity(player.getX(), player.getY());
+		                if (currDist < currlow)
+		                {
+		                    currlow = currDist;
+		                    currX = c.getX();
+		                    currY = c.getY();
 
-                }
-            }
+		                }
+		            }
 
-            map.setClosest((int) currX, (int) currY);
-            // pause a bit so that we don't choke the system
-            try
-            {
-                Thread.sleep(4);
-            } catch (Exception e)
-            {
-                System.out.println("we can't sleep, the Thread is not slowing down");
-            }
-            // calculate how long its been since we last ran the
-            // game logic
-            long delta = (System.nanoTime() - last) / 1000000;
-            last = System.nanoTime();
-            System.out.println(delta);
-            //  we divide the amount of time passed into segments
-            // of 5 milliseconds and update based on that
-            repaint();
-            for (int iFor = 0; iFor < delta / 5; iFor++)
-            {
-                logic(5);
-                System.out.println("logic sucks");
-            }
-            // after we've run through the segments if there is anything
-            // left over we update for that
-            if ((delta % 5) != 0)
-            {
-                logic(delta % 5);
-            }
-        }
+		            map.setClosest((int) currX, (int) currY);
+		            // pause a bit so that we don't choke the system
+		            try
+		            {
+		                Thread.sleep(4);
+		            } catch (Exception e)
+		            {
+		                System.out.println("we can't sleep, the Thread is not slowing down");
+		            }
+		            // calculate how long its been since we last ran the
+		            // game logic
+		            long delta = (System.nanoTime() - last) / 1000000;
+		            last = System.nanoTime();
+		            System.out.println(delta);
+		            //  we divide the amount of time passed into segments
+		            // of 5 milliseconds and update based on that
+		            repaint();
+		            for (int iFor = 0; iFor < delta / 5; iFor++)
+		            {
+		                logic(5);
+		                System.out.println("logic sucks");
+		            }
+		            // after we've run through the segments if there is anything
+		            // left over we update for that
+		            if ((delta % 5) != 0)
+		            {
+		                logic(delta % 5);
+		            }
+				System.out.print(player.getX() + " " + player.getY());
+			}
+
     }
 	//logic does some stuff to move our player this will become mor complicated
     //shortly
@@ -118,10 +131,11 @@ Map map = new Map();
         float dx = 0;
         float dy = 0;
 
+        right = true;
         if (left)
         {
             dx -= 2.5f;
-            setBackground(new Color(23,44,124));
+
         }
         if (right)
         {
@@ -144,7 +158,7 @@ Map map = new Map();
 
         // if the player needs to move attempt to move the entity
         // based on the keys multiplied by the amount of time thats
-        // passed
+
         if ((dx != 0) || (dy != 0))
         {
             player.move(dx * delta * 0.003f,
@@ -158,15 +172,11 @@ Map map = new Map();
 		super.paintComponent(page);
 
         page.setColor(myPurp);
-        page.fillRect(23, 55, 453, 345);
+
+        page.fillRect(0, 0, 450, 270);
         map.paint(page);
         player.paint(page);
-        //to basic of code just to chec
-		page.drawString("player what: ", 5,
-				(height - 10));
-		zombieLbl.setText("im the player: where do i print?");
-		page.drawString("pricne health: ", 150,
-				(height - 10));
+
 	}
 
 
@@ -177,50 +187,30 @@ Map map = new Map();
         /**
          * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
          */
-        float dx = 0;
-        float dy = 0;
-        long last = System.nanoTime();
-        long delta = (System.nanoTime() - last) / 1000000;
+
         public void keyPressed(KeyEvent e)
         {
             // check the keyboard and record which keys are pressed
             if (e.getKeyCode() == KeyEvent.VK_LEFT)
             {
+
+            	System.out.println("LEFT");
                 left = true;
-                dx -= 2.5f;
-                setBackground(new Color(203,44,124));
-
-
-                repaint();
             }
             if (e.getKeyCode() == KeyEvent.VK_RIGHT)
             {
-                dx += 2.5f;
                 right = true;
-                setBackground(new Color(20,44,124));
-
             }
             if (e.getKeyCode() == KeyEvent.VK_DOWN)
             {
-                dy += 1;
                 down = true;
-                setBackground(new Color(203,44,14));
 
             }
             if (e.getKeyCode() == KeyEvent.VK_UP)
             {
                 up = true;
-                dy += -7.0;
-                setBackground(new Color(23,234,124));
 
 
-            }
-
-            if ((dx != 0) || (dy != 0))
-            {
-                player.move(dx * delta * 0.003f,
-                        dy * delta * 0.003f);
-                repaint();
             }
 
         }

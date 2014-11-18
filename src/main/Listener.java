@@ -1,4 +1,3 @@
-
 package main;
 import java.awt.Color;
 import java.io.File;
@@ -17,24 +16,17 @@ public class Listener implements Runnable{
 		System.out.println(color);
 	}
 	
-	public void run()
-    {
-        color = (String) (DBOps.getData("info", "1", "id", "string_colour")).get(0);
-
-        if (color.equals("RED"))
-            Driver.newPanel.mainPanel.setBackground(Color.RED);
-        if (color.equals("GREEN"))
-        {
-            Driver.newPanel.mainPanel.setBackground(Color.GREEN);
-        System.out.println("im black");
-        }
-		if (color.equals("CYAN"))
-			Driver.newPanel.mainPanel.setBackground(Color.CYAN);
-		if (color.equals("BLACK"))
-        {
-            Driver.newPanel.mainPanel.setBackground(Color.BLACK);
-            System.out.println("im black");
-        }
+	public void run() {
+		color = (String)(DBOps.getData("info", "1", "id", "string_colour")).get(0);
+		
+//		if (color.equals("RED"))
+//			Driver.newPanel.sharedView.setBackground(Color.RED);
+//		if (color.equals("GREEN"))
+//			Driver.newPanel.sharedView.setBackground(Color.GREEN);
+//		if (color.equals("CYAN"))
+//			Driver.newPanel.sharedView.setBackground(Color.CYAN);
+//		if (color.equals("BLACK"))
+//			Driver.newPanel.sharedView.setBackground(Color.BLACK);
 	}
 
 }

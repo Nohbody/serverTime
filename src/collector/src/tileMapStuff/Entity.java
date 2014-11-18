@@ -56,7 +56,8 @@ public class Entity {
     public boolean move(float dx, float dy) {
 		// work out what the new position of this entity will be
 //		dy /= map.TILE_SIZE;
-//        dx /= map.TILE_SIZE;
+
+//       dx /= map.TILE_SIZE;
         float nx = (int)(x + dx)/map.TILE_SIZE;
 		float ny = (int)(y + dy)/map.TILE_SIZE;
         // check if the new position of the entity collides with
@@ -145,10 +146,10 @@ public class Entity {
 		//g.rotate(ang, xp, yp);
 
         //g.drawImage(entityImage, (int) (xp - 20), (int) (yp - 30), null);
-        g.setColor(new Color(45, 222, 45));
 
+        g.setColor(Color.ORANGE);
 //
-        g.fill3DRect((int)x, (int)y, 40, 40, true);
-		//g.rotate(-ang, xp, yp);
+        g.fill3DRect((int)x, (int)y, 18, 18, true);
+
 	}
 }

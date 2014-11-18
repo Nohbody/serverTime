@@ -1,13 +1,27 @@
 package gui;
 
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.SwingUtilities;
+
+
 import main.DBOps;
 import main.Driver;
 import main.User;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 
 /* *************************************************************
 File Name: LoginPanel.java
@@ -150,12 +164,9 @@ public class LoginPanel extends JPanel {
 				Driver.newPanel.mainPanel.setLayout(new FlowLayout());
 				Driver.newPanel.mainPanel.removeAll();
 				Driver.newPanel.mainPanel.setPreferredSize(null);
-				MenuPanel mp= new MenuPanel();
-                Driver.newPanel.mainPanel.add(mp);
-                /**this is where i need to add the new panel
-                 *
-                 */
-				Driver.newPanel.mainPanel.remove(mp);
+
+				Driver.newPanel.mainPanel.add(new MenuPanel());
+
 				Driver.newPanel.chatPanel.messageField.setText("");
 				Driver.newPanel.chatPanel.messageField.setEditable(true);
 				Driver.newPanel.chatPanel.send.setEnabled(true);
