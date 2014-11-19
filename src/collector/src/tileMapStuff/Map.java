@@ -46,38 +46,7 @@ public class Map
      * The actual data for our map
      */
 //	private int[][] data = new int[WIDTH][HEIGHT];
-    private int[][] data = new int[][]
-
-            {
-
-                    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 1},
-                    {1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1},
-                    {1, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
-                    {1, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-                    {1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1},
-                    {1, 0, 0, 0, 2, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1},
-                    {1, 0, 2, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
-                    {1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
-                    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
-                    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
-                    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-
-
-            };
+    private int[][] data;
 
     public ArrayList<Coin> coinList = new ArrayList<Coin>();
     public static String color;
@@ -104,7 +73,38 @@ public class Map
 //        } finally {
 //            br.close();
 //        }
+        data = new int[][]
 
+                {
+
+                        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1},
+                        {1, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
+                        {1, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
+                        {1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1},
+                        {1, 0, 0, 0, 2, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1},
+                        {1, 0, 2, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
+                        {1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
+                        {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
+                        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+
+
+                };
     }
 
     public ArrayList<Coin> getCoinList()
@@ -133,37 +133,22 @@ public class Map
                 // otherwise use a dark gray
                 if (data[x][y] == BLOCKED)
                 {
-
-//                    if (color.equals("RED"))
-//                        g.setColor(Color.RED);
-//                    else if (color.equals("BLACK"))
-//                    {
-//                        g.setColor(Color.BLACK);
-//
-//                    } else if (color.equals("GREEN"))
-//                    {
-//                        g.setColor(Color.GREEN);
-//
-//                    } else if (color.equals("CYAN"))
-//                        g.setColor(Color.CYAN);
-//                    else
-                        g.setColor(Color.blue);
+                    g.setColor(new Color(13,140,200));
                     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 }
                 if (data[x][y] == COIN)
-            {
-                coinList.add(new Coin(this, x, y));
-                g.setColor(Color.GREEN);
-                g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE / 2, TILE_SIZE / 2);
+                {
+                    coinList.add(new Coin(this, x, y));
+                    g.setColor(Color.GREEN);
+                    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE / 2, TILE_SIZE / 2);
 
-            }
+                }
                 if (data[x][y] == CLOSEST)
                 {
                     g.setColor(Color.RED);
                     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE / 2, TILE_SIZE / 2);
-                    System.out.println("we found a closest");
-                }
 
+                }
             }
         }
     }
@@ -172,6 +157,8 @@ public class Map
      * @param x The x position to check for blocking
      * @param y The y position to check for blocking
      * @return True if the location is isBlocked
+     * is a coin and a method to reset the coin if
+     * it is gathered
      */
     public boolean isBlocked(float x, float y)
     {
@@ -179,17 +166,18 @@ public class Map
         // values) and check the value
         return data[(int) x][(int) y] == BLOCKED;
     }
+
     public boolean isCoin(float x, float y)
     {
         // look up the right cell (based on simply rounding the floating
         // values) and check the value
 
-        return data[(int) x][(int) y] == COIN || data[(int) x][(int) y] == CLOSEST ;
+        return data[(int) x][(int) y] == COIN || data[(int) x][(int) y] == CLOSEST;
     }
 
     public void setClear(int x, int y)
     {
-        data[x][y]= CLEAR;
+        data[x][y] = CLEAR;
         resetCoin();
     }
 
@@ -197,6 +185,7 @@ public class Map
     {
         data[x][y] = CLOSEST;
     }
+
     //method to replace the coin in a new and random space
     public void resetCoin()
     {

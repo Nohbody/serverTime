@@ -1,7 +1,6 @@
 package collector.src.tileMapStuff;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 /**
  */
@@ -10,23 +9,22 @@ public class Entity {
 	protected float x;
 	/** The y position of this entity in terms of grid cells */
 	protected float y;
-	/** The entityImage to draw for this entity */
-	protected BufferedImage entityImage;
+
 	/** The map which this entity is wandering around */
 	protected Map map;
-	/** The angle to draw this entity at */
-	protected float ang;
+
 	/** The size of this entity, this is used to calculate collisions with walls */
-	private float size = 0.3f;
+	private float size = 0.8f;
 	private boolean grounded = true;
     protected int score = 0;
 
-	public Entity(BufferedImage entityImage, Map map, float x, float y) {
-		this.entityImage = entityImage;
-		this.map = map;
-		this.x = x*map.TILE_SIZE;
-		this.y = y*map.TILE_SIZE;
-	}
+    public void setColor(Color playColor)
+    {
+        this.playColor = playColor;
+    }
+
+    protected Color playColor = new Color(233, 0, 66);
+
 
     public Entity(Map map, float x, float y)
     {
@@ -44,25 +42,18 @@ public class Entity {
         return y;
     }
 
-    //proximity detection for
-    public int proximity()
-    {
-        return 0;
-    }
     public void setScore(int add)
     {
         this.score += add;
     }
-    public boolean move(float dx, float dy) {
-		// work out what the new position of this entity will be
-//		dy /= map.TILE_SIZE;
 
-//       dx /= map.TILE_SIZE;
-        float nx = (int)(x + dx)/map.TILE_SIZE;
-		float ny = (int)(y + dy)/map.TILE_SIZE;
+    public boolean move(float dx, float dy) {
+
+        float nx = x + dx;
+		float ny = y + dy;
         // check if the new position of the entity collides with
 		// anything
-		if (validLocation(nx, ny)) {
+        if (validLocation(nx, ny)) {
 			// if it doesn't then change our position to the new position
 			x = nx;
 			y = ny;
@@ -78,7 +69,7 @@ public class Entity {
 			return true;
 		}
 		
-		// if it wasn't a valid move don't do anything apart from 
+		// if it wasn't a valid move don't do anything apart from
 		// tell the caller
 		return false;
 	}
@@ -97,16 +88,16 @@ public class Entity {
         // the player to see whether we're at an invalid location
         // if any of them are isBlocked then the location specified
         // isn't valid
-        System.out.println("nx" + nx + " ny " + ny);
-        if (map.isBlocked(nx - size, ny - size))
+
+        if (map.isBlocked(nx, ny))
         {
             return false;
         }
-        if (map.isBlocked(nx + size, ny - size))
+        if (map.isBlocked(nx + size, ny))
         {
             return false;
         }
-        if (map.isBlocked(nx - size, ny + size))
+        if (map.isBlocked(nx, ny + size))
         {
             grounded = true;
             return false;
@@ -130,7 +121,6 @@ public class Entity {
 
 	/**
 	 * Draw this entity to the graphics context provided.
-	 * 
 	 * @param g The graphics context to which the entity should be drawn
 	 */
 	public void paint(Graphics g) {
@@ -140,16 +130,8 @@ public class Entity {
 		// at 15,15.
 		int xp = (int) (Map.TILE_SIZE * x);
 		int yp = (int) (Map.TILE_SIZE * y);
-		
-		// rotate the sprite based on the current angle and then
-		// draw it
-		//g.rotate(ang, xp, yp);
-
-        //g.drawImage(entityImage, (int) (xp - 20), (int) (yp - 30), null);
-
-        g.setColor(Color.ORANGE);
-//
-        g.fill3DRect((int)x, (int)y, 18, 18, true);
+		g.setColor(playColor);
+        g.fill3DRect(xp, yp, 18, 18, true);
 
 	}
 }

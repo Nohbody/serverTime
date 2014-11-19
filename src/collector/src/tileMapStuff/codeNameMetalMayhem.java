@@ -11,6 +11,9 @@ public class codeNameMetalMayhem extends JFrame
 
     /**
      * @param args
+     * this class only exists so that i can test the game without signing in
+     * everytime
+     *
      */
 
     public static void main(String[] args) throws FileNotFoundException
