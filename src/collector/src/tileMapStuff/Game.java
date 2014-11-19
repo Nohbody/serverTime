@@ -43,7 +43,7 @@ public class Game extends JPanel
 		setPreferredSize (new  Dimension(length, height));
 		setFocusable(true);
 		
-		Timer myTimer = new Timer(10, new GameLoop());
+		Timer myTimer = new Timer(12, new GameLoop());
 		myTimer.start();
 
     }

@@ -4,56 +4,30 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * The map holds the data about game area. In this case its responsible
- * for both rendering the map and check collision against the grid cells
- * within.
- * <p/>
- * Our map is a simple WIDTHxHEIGHT grid containing value 0 to indicate
- * a clear cell and 1 to incidate a wall.
- *
- * @author Kevin Glass
- */
 public class Map
 {
     /**
-     * The value indicating a clear cell
+     * The value indicating a each type of cell
      */
     private static final int CLEAR = 0;
-    /**
-     * The value indicating a isBlocked cell
-     */
     private static final int BLOCKED = 1;
     private static final int COIN = 2;
     private static final int CLOSEST = 5;
     /**
-     * The width in grid cells of our map
+     * The width  and height in grid cells of our map
      */
     private static final int WIDTH = 25;
-    /**
-     * The height in grid cells of our map
-     */
     private static final int HEIGHT = 15;
-
     /**
      * The rendered size of the tile (in pixels)
      */
-
     public static final int TILE_SIZE = 18;
-
-
     /**
      * The actual data for our map
      */
-//	private int[][] data = new int[WIDTH][HEIGHT];
     private int[][] data;
-
     public ArrayList<Coin> coinList = new ArrayList<Coin>();
-    public static String color;
 
-    /**
-     * Create a new map with some default contents
-     */
     public Map()
     {
 //   will get this to work so we can impliment a level editor
@@ -162,16 +136,11 @@ public class Map
      */
     public boolean isBlocked(float x, float y)
     {
-        // look up the right cell (based on simply rounding the floating
-        // values) and check the value
         return data[(int) x][(int) y] == BLOCKED;
     }
 
     public boolean isCoin(float x, float y)
     {
-        // look up the right cell (based on simply rounding the floating
-        // values) and check the value
-
         return data[(int) x][(int) y] == COIN || data[(int) x][(int) y] == CLOSEST;
     }
 
@@ -183,6 +152,17 @@ public class Map
 
     public void setClosest(int x, int y)
     {
+        for (int xCount = 0; xCount < WIDTH; xCount++)
+        {
+            for (int yCount = 0; yCount < HEIGHT; yCount++)
+            {
+//hoping this will reset what was the closest coin to a regular coin
+                if (data[xCount][yCount] == CLOSEST)
+                {
+                    data[xCount][yCount] = COIN;
+                }
+            }
+        }
         data[x][y] = CLOSEST;
     }
 
@@ -192,7 +172,7 @@ public class Map
         Random rand = new Random();
         int x = rand.nextInt(WIDTH);
         int y = rand.nextInt(HEIGHT);
-        if (data[x][y] != BLOCKED)
+        if (data[x][y] != BLOCKED && data[x][y] != COIN)
         {
             data[x][y] = COIN;
         }
