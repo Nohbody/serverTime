@@ -2,23 +2,17 @@ package collector.src.tileMapStuff;
 
 import java.awt.*;
 
-/**
- */
 public class Entity {
-	/** The x position of this entity in terms of grid cells */
+	/** The x and y position of this entity in terms of grid cells
+     * that make up the map object*/
 	protected float x;
-	/** The y position of this entity in terms of grid cells */
 	protected float y;
-
-	/** The map which this entity is wandering around */
 	protected Map map;
-
 	/** The size of this entity, this is used to calculate collisions with walls */
 	private float size = 0.8f;
 	private boolean grounded = false;
     protected int score = 0;
-
-    protected Color playColor = new Color(233, 0, 66);
+    protected Color playColor = new Color(233, 9, 76);
 
     public Entity(Map map, float x, float y)
     {
@@ -41,8 +35,8 @@ public class Entity {
         this.score += add;
     }
 
-    public boolean move(float dx, float dy) {
-
+    public boolean move(float dx, float dy)
+    {
         float nx = x + dx;
 		float ny = y + dy;
         // check if the new position of the entity collides with
@@ -56,9 +50,7 @@ public class Entity {
                 map.setClear((int)x, (int)y);
                 setScore(1);
                 System.out.println(score);
-
             }
-
 			return true;
 		}
 		return false;
@@ -85,9 +77,6 @@ public class Entity {
             grounded = true;
             return false;
         }
-
-        // if all the points checked are unblocked then we're in an ok
-        // location
         return true;
     }
 
@@ -98,24 +87,13 @@ public class Entity {
         {
             grounded = true;
         }
-
-
         return grounded;
     }
 
-	/**
-	 * Draw this entity to the graphics context provided.
-	 * @param g The graphics context to which the entity should be drawn
-	 */
 	public void paint(Graphics g) {
-		// work out the screen position of the entity based on the
-		// x/y position and the size that tiles are being rendered at. So
-		// if we're at 1.5,1.5 and the tile size is 10 we'd render on screen 
-		// at 15,15.
 		int xp = (int) (Map.TILE_SIZE * x);
 		int yp = (int) (Map.TILE_SIZE * y);
 		g.setColor(playColor);
         g.fill3DRect(xp, yp, 18, 18, true);
-
 	}
 }

@@ -19,7 +19,6 @@ public class Coin extends Entity
         super(map, x, y);
     }
 
-
     public void paint(Graphics g) {
         // work out the screen position of the entity based on the
         // x/y position and the size that tiles are being rendered at. So
@@ -27,18 +26,15 @@ public class Coin extends Entity
         // at 15,15.
         int xp = (int) (map.TILE_SIZE * x);
         int yp = (int) (map.TILE_SIZE * y);
-
+        g.setColor(new Color(222, 104, 244));
         g.drawRect (xp ,yp , map.TILE_SIZE, map.TILE_SIZE);
 
     }
-
     //proximity detection
     public float proximity(float x, float y)
     {
         float distance = 0;
         distance = (float) Math.sqrt(Math.pow((this.x - x), 2)+Math.pow((this.y -y), 2));
-
-
         return distance;
     }
 }

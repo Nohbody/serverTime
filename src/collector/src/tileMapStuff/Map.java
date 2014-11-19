@@ -25,7 +25,7 @@ public class Map
     /**
      * The actual data for our map
      */
-    private Color coinColor = new Color(244, 200, 100);
+    private Color coinColor = new Color(244, 20, 100);
     private int[][] data;
     public ArrayList<Coin> coinList = new ArrayList<Coin>();
 
@@ -77,8 +77,6 @@ public class Map
                         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
                         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
                         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-
-
                 };
     }
 
@@ -98,7 +96,7 @@ public class Map
     {
         // loop through all the tiles in the map rendering them
         // based on whether they block or not
-
+        coinList = new ArrayList<Coin>();
         for (int x = 0; x < WIDTH; x++)
         {
             for (int y = 0; y < HEIGHT; y++)

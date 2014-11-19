@@ -47,10 +47,7 @@ public class Game extends JPanel
 
         public void actionPerformed(ActionEvent arg0)
         {
-            long last = System.nanoTime();
-
             requestFocus();
-            // keep looking while the game is running
             player.move(0, gravity);
             coins = map.getCoinList();
             float currlow = 1000;
@@ -66,12 +63,10 @@ public class Game extends JPanel
                     currY = c.getY();
                 }
             }
-
             map.setClosest((int) currX, (int) currY);
             repaint();
             logic();
         }
-
     }
 
     //logic does some stuff to move our player this will become mor complicated
@@ -87,12 +82,10 @@ public class Game extends JPanel
         if (left)
         {
             dx -= speed;
-
         }
         if (right)
         {
             dx += speed;
-
         }
         if (up && player.isGrounded())
         {
@@ -101,7 +94,6 @@ public class Game extends JPanel
         if (down)
         {
             dy += downPound;
-
         }
         player.move(dx * smoothing, dy * smoothing);
     }
