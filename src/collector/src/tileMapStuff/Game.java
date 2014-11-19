@@ -64,6 +64,12 @@ public class Game extends JPanel
                 }
             }
             map.setClosest((int) currX, (int) currY);
+            //begin to connect to the database
+      /*      String userName = "chris";
+            String userIdString = DBOps.getData("users", userName, userName, "id").get(0);
+            int userId = Integer.parseInt(userIdString);
+            DBOps.getData("player", "", "id", "string_colour").get(0);*/
+
             repaint();
             logic();
         }
