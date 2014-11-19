@@ -16,8 +16,8 @@ public class Map
     /**
      * The width  and height in grid cells of our map
      */
-    private static final int WIDTH = 25;
-    private static final int HEIGHT = 15;
+    public static final int WIDTH = 25;
+    public static final int HEIGHT = 15;
     /**
      * The rendered size of the tile (in pixels)
      */
@@ -25,6 +25,7 @@ public class Map
     /**
      * The actual data for our map
      */
+    private Color coinColor = new Color(244, 200, 100);
     private int[][] data;
     public ArrayList<Coin> coinList = new ArrayList<Coin>();
 
@@ -119,7 +120,7 @@ public class Map
                 }
                 if (data[x][y] == CLOSEST)
                 {
-                    g.setColor(Color.RED);
+                    g.setColor(coinColor);
                     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE / 2, TILE_SIZE / 2);
 
                 }
