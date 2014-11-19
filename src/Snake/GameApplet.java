@@ -1,5 +1,5 @@
 
-package Snake;
+package snake;
 
 
 import processing.core.*;
@@ -11,45 +11,53 @@ public class GameApplet extends PApplet {
 	Snake mySnake;
 	Snake mySnake2;
 	Snake mySnake3;
-	Block myBlock;
+	Block[] myBlocks;
 	Block myBlock2;
 	PFont scoreFont;
 	int score;
 	int score2;
 	boolean gameOver;
+	double curClosest = 10000;
+	
     static public void main(String args[]) {
         PApplet.main(new String[] { "Snake.GameApplet" });
     }
+    
 	public void setup() {
-	  size(600, 600);
+	  size(300, 300);
 	  background(0);
+	  frameRate(10);
 	  
 	  mySnake = new Snake(color(255,0,0), width/2 - 100, height/2, 10, false);
-	  mySnake2 = new Snake(color(0, 0, 255), width/2 + 100, height/2, 10, false);
+//	  mySnake2 = new Snake(color(0, 0, 255), width/2 + 100, height/2, 10, false);
 	  mySnake.snakeSize = 1;
-	  mySnake2.snakeSize = 1;
+//	  mySnake2.snakeSize = 1;
 	  mySnake3 = null;
 
-	  myBlock = new Block(color(255, 0, 0));
-	  myBlock2 = new Block(color(0, 0, 255));
+	  myBlocks = new Block[5];
+	  for (int i = 0; i < 5; i++)
+		  myBlocks[i] = (new Block(color(0, 255, 0)));
+//	  myBlock2 = new Block(color(0, 0, 255));
 
 	  mySnake.direction = DOWN;
-	  mySnake2.direction = DOWN;
+//	  mySnake2.direction = DOWN;
 	  gameOver = false;
 
 	  score = 0;
-	  score2 = 0;
+//	  score2 = 0;
 	  scoreFont  = createFont("Arial", 16, true);
 	  textAlign(CENTER);
+	  curClosest = 10000;
 	}
 
 	public void draw() {
 
 	  background(0);
-	  myBlock.display();
-	  myBlock2.display();
+	  for (int i = 0; i < 5; i++)
+		  myBlocks[i].display();
+//	  myBlock2.display();
 	  mySnake.display();
-	  mySnake2.display();
+//	  mySnake2.display();
 	  if (mySnake3 != null)
 	    mySnake3.display();
 
@@ -66,10 +74,10 @@ public class GameApplet extends PApplet {
 	      mySnake.oldPositionsY[i] = mySnake.partsY[i];
 	    }
 
-	    for (int i = 0; i < mySnake2.snakeSize; i++) {
-	      mySnake2.oldPositionsX[i] = mySnake2.partsX[i];
-	      mySnake2.oldPositionsY[i] = mySnake2.partsY[i];
-	    }
+//	    for (int i = 0; i < mySnake2.snakeSize; i++) {
+//	      mySnake2.oldPositionsX[i] = mySnake2.partsX[i];
+//	      mySnake2.oldPositionsY[i] = mySnake2.partsY[i];
+//	    }
 
 	    if (mySnake3 != null) {
 	      for (int i = 0; i < mySnake3.snakeSize; i++) {
@@ -96,23 +104,23 @@ public class GameApplet extends PApplet {
 	      break;
 	    }
 
-	    switch(mySnake2.direction) {
-	      case(RIGHT):
-	      mySnake2.moveRight();
-	      break;
-
-	      case(UP):
-	      mySnake2.moveUp();
-	      break;
-
-	      case(DOWN):
-	      mySnake2.moveDown();
-	      break;
-
-	      case(LEFT):
-	      mySnake2.moveLeft();
-	      break;
-	    }
+//	    switch(mySnake2.direction) {
+//	      case(RIGHT):
+//	      mySnake2.moveRight();
+//	      break;
+//
+//	      case(UP):
+//	      mySnake2.moveUp();
+//	      break;
+//
+//	      case(DOWN):
+//	      mySnake2.moveDown();
+//	      break;
+//
+//	      case(LEFT):
+//	      mySnake2.moveLeft();
+//	      break;
+//	    }
 
 	    if (mySnake3 != null) {
 	      switch(mySnake3.direction) {
@@ -141,12 +149,12 @@ public class GameApplet extends PApplet {
 	      }
 	    }
 
-	    if (mySnake2.speed > 0) {
-	      for (int i = 0; i < mySnake2.snakeSize; i++) { 
-	        mySnake2.partsX[i+1] = mySnake2.oldPositionsX[i];
-	        mySnake2.partsY[i+1] = mySnake2.oldPositionsY[i];
-	      }
-	    }
+//	    if (mySnake2.speed > 0) {
+//	      for (int i = 0; i < mySnake2.snakeSize; i++) { 
+//	        mySnake2.partsX[i+1] = mySnake2.oldPositionsX[i];
+//	        mySnake2.partsY[i+1] = mySnake2.oldPositionsY[i];
+//	      }
+//	    }
 
 	    if (mySnake3 != null) {
 	      if (mySnake3.speed > 0) {
@@ -157,17 +165,19 @@ public class GameApplet extends PApplet {
 	      }
 	    }
 
-	    if (detectHit(mySnake, myBlock)) {
-	      myBlock = new Block(color(255, 0, 0));
-	      score += 10;
-	      mySnake.snakeSize++;
+	    for (int i = 0; i < 5; i++) {
+		    if (detectHit(mySnake, myBlocks[i])) {
+		      myBlocks[i] = new Block(color(0, 255, 0));
+		      score += 10;
+		      mySnake.snakeSize++;
+		    }
 	    }
 
-	    if (detectHit(mySnake2, myBlock2)) {
-	      myBlock2 = new Block(color(0, 0, 255));
-	      score2 += 10;
-	      mySnake2.snakeSize++;
-	    }
+//	    if (detectHit(mySnake2, myBlock2)) {
+//	      myBlock2 = new Block(color(0, 0, 255));
+//	      score2 += 10;
+//	      mySnake2.snakeSize++;
+//	    }
 
 	    if (mySnake3 != null) {
 	      if (detectHit (mySnake, mySnake3)) {
@@ -179,64 +189,68 @@ public class GameApplet extends PApplet {
 	          mySnake.partsY[i] = mySnake.oldPositionsY[i];
 	        }
 	      }
-	      if (detectHit(mySnake2, mySnake3)) {
-	        mySnake2.speed = 0;
-
-	        for (int i = 0; i < mySnake2.snakeSize; i++) { 
-	          mySnake2.partsX[i] = mySnake2.oldPositionsX[i];
-	          mySnake2.partsY[i] = mySnake2.oldPositionsY[i];
-	        }
-	      }
+//	      if (detectHit(mySnake2, mySnake3)) {
+//	        mySnake2.speed = 0;
+//
+//	        for (int i = 0; i < mySnake2.snakeSize; i++) { 
+//	          mySnake2.partsX[i] = mySnake2.oldPositionsX[i];
+//	          mySnake2.partsY[i] = mySnake2.oldPositionsY[i];
+//	        }
+//	      }
 	    }
 
-
-	    if (myBlock.passedTime == 0) {
-	      myBlock = new Block(color(255, 0, 0));
+	    for (int i = 0; i < 5; i++) {
+		    if (myBlocks[i].passedTime == 0) {
+		      myBlocks[i] = new Block(color(0, 255, 0));
+		    }
 	    }
 
-	    if (myBlock2.passedTime == 0) {
-	      myBlock2 = new Block(color(0, 0, 255));
-	    }
+//	    if (myBlock2.passedTime == 0) {
+//	      myBlock2 = new Block(color(0, 0, 255));
+//	    }
 
-	    if (detectHit(mySnake, mySnake2)) {
-	      mySnake.speed = 0;
+//	    if (detectHit(mySnake, mySnake)) {
+//	      mySnake.speed = 0;
+//
+//	      for (int i = 0; i < mySnake.snakeSize; i++) { 
+//	        mySnake.partsX[i] = mySnake.oldPositionsX[i];
+//	        mySnake.partsY[i] = mySnake.oldPositionsY[i];
+//	      }
+//
+//	      mySnake3 = new Snake(color(0, 255, 0), 0, 0, 10, true);
+//	      mySnake3.snakeSize = 20;
+//	      mySnake3.direction = RIGHT;
+//	    }
 
-	      for (int i = 0; i < mySnake.snakeSize; i++) { 
-	        mySnake.partsX[i] = mySnake.oldPositionsX[i];
-	        mySnake.partsY[i] = mySnake.oldPositionsY[i];
-	      }
+//	    if (detectHit(mySnake2, mySnake)) {
+//	      mySnake2.speed = 0;
+//
+//	      for (int i = 0; i < mySnake2.snakeSize; i++) { 
+//	        mySnake2.partsX[i] = mySnake2.oldPositionsX[i];
+//	        mySnake2.partsY[i] = mySnake2.oldPositionsY[i];
+//	      } 
+//
+//	      mySnake3 = new Snake(color(0, 255, 0), 0, 0, 10, true);
+//	      mySnake3.snakeSize = 20;
+//	      mySnake3.direction = RIGHT;
+//	    }
 
-	      mySnake3 = new Snake(color(0, 255, 0), 0, 0, 10, true);
-	      mySnake3.snakeSize = 20;
-	      mySnake3.direction = RIGHT;
-	    }
-
-	    if (detectHit(mySnake2, mySnake)) {
-	      mySnake2.speed = 0;
-
-	      for (int i = 0; i < mySnake2.snakeSize; i++) { 
-	        mySnake2.partsX[i] = mySnake2.oldPositionsX[i];
-	        mySnake2.partsY[i] = mySnake2.oldPositionsY[i];
-	      } 
-
-	      mySnake3 = new Snake(color(0, 255, 0), 0, 0, 10, true);
-	      mySnake3.snakeSize = 20;
-	      mySnake3.direction = RIGHT;
-	    }
-
-	    if (score > score2 && mySnake2.speed == 0) 
-	      gameOver = true;
+//	    if (score > score2 && mySnake2.speed == 0) 
+//	      gameOver = true;
 
 	    if (score2 > score && mySnake.speed == 0)
 	      gameOver = true;
 
-	    if (mySnake.speed == 0 && mySnake2.speed == 0)
-	      gameOver = true;
+//	    if (mySnake.speed == 0 && mySnake2.speed == 0)
+//	      gameOver = true;
 	  }
 	  else {
 	    text("GAME OVER", width/2, height/2);
 	    text("(Press Spacebar to Continue)", width/2, height/2 + 20);
 	  }
+	  
+	  detectClosest();
+	  
 	}
 
 	public void keyPressed() {
@@ -262,16 +276,16 @@ public class GameApplet extends PApplet {
 	    setup();
 	  }
 
-	  if (key == CODED) {
-	    if (keyCode == LEFT)
-	      mySnake2.direction = LEFT;
-	    else if (keyCode == RIGHT)
-	      mySnake2.direction = RIGHT;
-	    else if (keyCode == UP)
-	      mySnake2.direction = UP;
-	    else if (keyCode == DOWN)
-	      mySnake2.direction = DOWN;
-	  }
+//	  if (key == CODED) {
+//	    if (keyCode == LEFT)
+//	      mySnake2.direction = LEFT;
+//	    else if (keyCode == RIGHT)
+//	      mySnake2.direction = RIGHT;
+//	    else if (keyCode == UP)
+//	      mySnake2.direction = UP;
+//	    else if (keyCode == DOWN)
+//	      mySnake2.direction = DOWN;
+//	  }
 	}
 
 	class Snake {
@@ -439,7 +453,7 @@ public class GameApplet extends PApplet {
 
 	boolean detectHit(Snake a, Snake b) {
 
-	  for (int i = 0; i < b.snakeSize; i++) {
+	  for (int i = 1; i < b.snakeSize; i++) {
 
 	    boolean hit = true;
 
@@ -457,5 +471,21 @@ public class GameApplet extends PApplet {
 	  }  
 
 	  return false;
+	}
+	
+	void detectClosest() {
+		curClosest = 10000;
+		for (int i = 0; i < 5; i++) {
+			double temp = Math.sqrt(Math.pow((mySnake.partsX[0] - myBlocks[i].xpos),2) + Math.pow((mySnake.partsY[0] - myBlocks[i].ypos),2));
+			System.out.println("Temp: " + temp + "\tCurrent: " + curClosest);
+			if (temp < curClosest) {
+				curClosest = temp;
+				
+				for (int j = 0; j < 5; j++)
+					myBlocks[j].displayColor = color(0,255,0);
+				myBlocks[i].displayColor = color(255,0,0);
+			}
+		}
+		
 	}
 }
