@@ -2,6 +2,8 @@ package collector.src.tileMapStuff;
 
 import java.awt.*;
 
+import main.DBOps;
+
 public class Entity {
 	/** The x and y position of this entity in terms of grid cells
      * that make up the map object*/
@@ -49,6 +51,8 @@ public class Entity {
             {
                 map.setClear((int)x, (int)y);
                 setScore(1);
+                int DBscore = Integer.parseInt((DBOps.getData("scores", "1", "id", "Collector")).get(0)) + 5;
+                DBOps.updateData("scores", "Collector", "" + DBscore, "id", "1");
                 System.out.println(score);
             }
 			return true;

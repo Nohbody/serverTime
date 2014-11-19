@@ -130,7 +130,6 @@ public class ChatPanel extends JPanel implements Runnable{
 
 		public void actionPerformed(ActionEvent e) {
 			if (messageField.getText().equals("/users")) {
-				
 				DBOps.updateData("info", "string_colour", "SkyNet" + ": " + " Online users: " + Driver.onlineUsers(), "id", "2");
 				try {
 					DBOps.updateData("info", "time_stamp", getTimeStamp(), "id", "2");

@@ -2,6 +2,10 @@
 package snake;
 
 
+import java.text.ParseException;
+
+import main.DBOps;
+import main.Driver;
 import processing.core.*;
 
 
@@ -168,7 +172,8 @@ public class GameApplet extends PApplet {
 	    for (int i = 0; i < 5; i++) {
 		    if (detectHit(mySnake, myBlocks[i])) {
 		      myBlocks[i] = new Block(color(0, 255, 0));
-		      score += 10;
+		      int score = Integer.parseInt((DBOps.getData("scores", "1", "id", "Snake")).get(0)) + 5;
+		      DBOps.updateData("scores", "Snake", "" + score, "id", "1");
 		      mySnake.snakeSize++;
 		    }
 	    }
