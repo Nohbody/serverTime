@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -15,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
+
 
 
 import main.DBOps;
@@ -128,6 +130,13 @@ public class LoginPanel extends JPanel {
 						if (passwordField.getText().equals(u.getPassword())) {
 							JOptionPane.showMessageDialog(null, "You are now logged in!");
 							Driver.currentUser = new User(u.getName(), passwordField.getText());
+							DBOps.updateData("users", "connected", "1", "user", u.getName());
+							DBOps.updateData("info", "string_colour", "SkyNet" + ": " + u.getName() + " has entered the fray.", "id", "2");
+							try {
+								DBOps.updateData("info", "time_stamp", Driver.newPanel.chatPanel.getTimeStamp(), "id", "2");
+							} catch (ParseException e1) {
+								e1.printStackTrace();
+							}
 							success = true;
 						}
 						else {
@@ -156,7 +165,13 @@ public class LoginPanel extends JPanel {
 					JOptionPane.showMessageDialog(null, "Username registered!");
 					Driver.currentUser = new User(attemptName.trim(), passwordField.getText());
 					DBOps.insertData("users", "user`, `password`, `connected", 
-							attemptName + "\", \"" + passwordField.getText() + "\", \"0");
+							attemptName + "\", \"" + passwordField.getText() + "\", \"1");
+					DBOps.updateData("info", "string_colour", "SkyNet" + ": " + Driver.currentUser.getName() + " has become one of us.", "id", "2");
+					try {
+						DBOps.updateData("info", "time_stamp", Driver.newPanel.chatPanel.getTimeStamp(), "id", "2");
+					} catch (ParseException e1) {
+					}
+						
 				}
 			}
 			

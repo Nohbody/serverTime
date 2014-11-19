@@ -129,11 +129,22 @@ public class ChatPanel extends JPanel implements Runnable{
 	private class SendListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			DBOps.updateData("info", "string_colour", Driver.currentUser.getName() + ": " + messageField.getText(), "id", "2");
-			try {
-				DBOps.updateData("info", "time_stamp", getTimeStamp(), "id", "2");
-			} catch (ParseException e1) {
-				e1.printStackTrace();
+			if (messageField.getText().equals("/users")) {
+				
+				DBOps.updateData("info", "string_colour", "SkyNet" + ": " + " Online users: " + Driver.onlineUsers(), "id", "2");
+				try {
+					DBOps.updateData("info", "time_stamp", getTimeStamp(), "id", "2");
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
+			}
+			else {
+				DBOps.updateData("info", "string_colour", Driver.currentUser.getName() + ": " + messageField.getText(), "id", "2");
+				try {
+					DBOps.updateData("info", "time_stamp", getTimeStamp(), "id", "2");
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
 			}
 			messageField.setText("");
 		}

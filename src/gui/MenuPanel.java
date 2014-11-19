@@ -32,15 +32,12 @@ public class MenuPanel extends JPanel {
     public Game game;
 	
 	public MenuPanel() {
-		snake = new JButton("snake");
-
+		snake = new JButton("Snake");
 			snake.addActionListener(new MenuButton());
 		collector = new JButton("Collector");
 			collector.addActionListener(new MenuButton());
 		stats = new JButton("Stats");
 			stats.addActionListener(new MenuButton());
-
-
 
 		gLayout = new GridBagLayout();
 		c = new GridBagConstraints();
