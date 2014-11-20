@@ -6,7 +6,7 @@ import javax.swing.*;
 
 
 import processing.core.PApplet;
-import snakegame.GameApplet;
+import snake.GameApplet;
 import main.Driver;
 
 import java.awt.*;
@@ -32,7 +32,7 @@ public class MenuPanel extends JPanel {
     public Game game;
 	
 	public MenuPanel() {
-		snake = new JButton("snakegame");
+		snake = new JButton("snake");
 			snake.addActionListener(new MenuButton());
 		collector = new JButton("Collector");
 			collector.addActionListener(new MenuButton());
