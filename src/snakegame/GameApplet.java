@@ -1,11 +1,8 @@
 
-package snake;
+package snakegame;
 
-
-import java.text.ParseException;
 
 import main.DBOps;
-import main.Driver;
 import processing.core.*;
 
 
@@ -24,7 +21,7 @@ public class GameApplet extends PApplet {
 	double curClosest = 10000;
 	
     static public void main(String args[]) {
-        PApplet.main(new String[] { "Snake.GameApplet" });
+        PApplet.main(new String[] { "snakegame.GameApplet" });
     }
     
 	public void setup() {
@@ -33,7 +30,7 @@ public class GameApplet extends PApplet {
 	  frameRate(10);
 	  
 	  mySnake = new Snake(color(255,0,0), width/2 - 100, height/2, 10, false);
-//	  mySnake2 = new Snake(color(0, 0, 255), width/2 + 100, height/2, 10, false);
+//	  mySnake2 = new snakegame(color(0, 0, 255), width/2 + 100, height/2, 10, false);
 	  mySnake.snakeSize = 1;
 //	  mySnake2.snakeSize = 1;
 	  mySnake3 = null;
@@ -172,8 +169,8 @@ public class GameApplet extends PApplet {
 	    for (int i = 0; i < 5; i++) {
 		    if (detectHit(mySnake, myBlocks[i])) {
 		      myBlocks[i] = new Block(color(0, 255, 0));
-		      int score = Integer.parseInt((DBOps.getData("scores", "1", "id", "Snake")).get(0)) + 5;
-		      DBOps.updateData("scores", "Snake", "" + score, "id", "1");
+		      int score = Integer.parseInt((DBOps.getData("scores", "1", "id", "snakegame")).get(0)) + 5;
+		      DBOps.updateData("scores", "snakegame", "" + score, "id", "1");
 		      mySnake.snakeSize++;
 		    }
 	    }
@@ -222,7 +219,7 @@ public class GameApplet extends PApplet {
 //	        mySnake.partsY[i] = mySnake.oldPositionsY[i];
 //	      }
 //
-//	      mySnake3 = new Snake(color(0, 255, 0), 0, 0, 10, true);
+//	      mySnake3 = new snakegame(color(0, 255, 0), 0, 0, 10, true);
 //	      mySnake3.snakeSize = 20;
 //	      mySnake3.direction = RIGHT;
 //	    }
@@ -235,7 +232,7 @@ public class GameApplet extends PApplet {
 //	        mySnake2.partsY[i] = mySnake2.oldPositionsY[i];
 //	      } 
 //
-//	      mySnake3 = new Snake(color(0, 255, 0), 0, 0, 10, true);
+//	      mySnake3 = new snakegame(color(0, 255, 0), 0, 0, 10, true);
 //	      mySnake3.snakeSize = 20;
 //	      mySnake3.direction = RIGHT;
 //	    }
