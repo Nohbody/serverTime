@@ -49,13 +49,13 @@ public class GUI extends JPanel{
 			title.setForeground(Color.WHITE);
 			title.setBackground(Color.BLACK);
 				title.setOpaque(true);
+				
 		gLayout = new GridBagLayout();
 			c = new GridBagConstraints();
 
-
 		mainPanel = new LoginPanel();
-
 			mainPanel.setBackground(Color.BLACK);
+		
 		chatPanel = new ChatPanel();
 			chatPanel.setBackground(Color.BLACK);
 			chatPanel.setBorder(new MatteBorder(2,0,0,0,Color.MAGENTA));

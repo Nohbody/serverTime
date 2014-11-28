@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -9,13 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.TimeZone;
 
+import javax.swing.BorderFactory;
+import javax.swing.Timer;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
@@ -46,8 +45,11 @@ public class ChatPanel extends JPanel implements Runnable{
 	public JButton send;
 	public GridBagLayout gLayout;
 	public GridBagConstraints c;
-	public String lastSent;
+	public long lastSent;
 	public SimpleAttributeSet keyWord;
+	public Thread myTimer, updateThread;
+	public Timer newTimer;
+	public int time;
 	
 	
 	public ChatPanel() throws ParseException, BadLocationException {
@@ -67,9 +69,12 @@ public class ChatPanel extends JPanel implements Runnable{
 		messagePane = new JScrollPane(messageArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			messagePane.setPreferredSize(new Dimension(450, 80));
 		
-		keyWord = new SimpleAttributeSet();
+		myTimer = new Thread(new ServerTime());
+		myTimer.start();
 			
-		messages.add("Skynet: Welcome to Server Time Chat!");
+		messages.add("SkyNet: Welcome to Server Time Chat! Available commands: /users, /start");
+		
+		keyWord = new SimpleAttributeSet();
 		
 		gLayout = new GridBagLayout();
 		c = new GridBagConstraints();
@@ -100,30 +105,12 @@ public class ChatPanel extends JPanel implements Runnable{
 	}
 	
 	public void updateChat() throws BadLocationException {
-		messageArea.setText(" ");
-		messageArea.setLayout(new GridLayout(messages.size(),1));
-		
-		for (String m:messages) {
-			String[] textWords = m.split(" ");
-			String username = textWords[0].substring(0, textWords[0].length());
-			String message = m.substring(username.length(), m.length());
-			
-			StyleConstants.setForeground(keyWord, Color.RED);
-			messageArea.getStyledDocument().insertString(messageArea.getText().length(),username, keyWord);
-			StyleConstants.setForeground(keyWord, Color.BLACK);
-			messageArea.getStyledDocument().insertString(messageArea.getText().length(),message + "\n", keyWord);
-		};
-		
-		messageArea.revalidate(); messageArea.repaint();
+		updateThread = new Thread(new UpdateChatThread());
+		updateThread.start();
 	}
 	
-	public String getTimeStamp() throws ParseException {
-	    Date currentTime = new Date();
-	    DateFormat timeFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
-	    timeFormat.setTimeZone(TimeZone.getTimeZone(""));
-
-	    String standardTime  = timeFormat.format(currentTime);
-		return standardTime;
+	public long getTimeStamp() throws ParseException {
+		return System.currentTimeMillis() / 1000L;
 	}
 	
 	private class SendListener implements ActionListener {
@@ -132,15 +119,45 @@ public class ChatPanel extends JPanel implements Runnable{
 			if (messageField.getText().equals("/users")) {
 				DBOps.updateData("info", "string_colour", "SkyNet" + ": " + " Online users: " + Driver.onlineUsers(), "id", "2");
 				try {
-					DBOps.updateData("info", "time_stamp", getTimeStamp(), "id", "2");
+					DBOps.updateData("info", "time_stamp", "" + getTimeStamp(), "id", "2");
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
 			}
+			
+			else if (messageField.getText().equals("/start")) {
+				if (Driver.returnRunning() == false) {
+					myTimer = new Thread(new ServerTime());
+					myTimer.start();
+					
+					DBOps.updateData("info", "time_stamp", "True", "id", "3");
+					DBOps.updateData("scores", "Collector", "" + 0, "id", "1");
+					DBOps.updateData("scores", "Snake", "" + 0, "id", "1");
+					
+					DBOps.updateData("info", "string_colour", "SkyNet" + ": " + "New match started! Teams have 60 seconds. Good luck!", "id", "2");
+					try {
+						DBOps.updateData("info", "time_stamp", "" + getTimeStamp(), "id", "2");
+						DBOps.updateData("info", "time_stamp", "" + getTimeStamp(), "id", "5");
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
+					
+					DBOps.updateData("info", "time_stamp", "60", "id", "4");
+				}
+				else {
+					DBOps.updateData("info", "string_colour", "SkyNet" + ": " + "Game is currently in progress.", "id", "2");
+					try {
+						DBOps.updateData("info", "time_stamp", "" + getTimeStamp(), "id", "2");
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+			
 			else {
 				DBOps.updateData("info", "string_colour", Driver.currentUser.getName() + ": " + messageField.getText(), "id", "2");
 				try {
-					DBOps.updateData("info", "time_stamp", getTimeStamp(), "id", "2");
+					DBOps.updateData("info", "time_stamp", "" + getTimeStamp(), "id", "2");
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
@@ -165,19 +182,122 @@ public class ChatPanel extends JPanel implements Runnable{
 	}
 
 	public void run() {
-
 		if (!(DBOps.getData("info", "2", "id", "string_colour").get(0)
 				.equals(messages.get(messages.size() - 1)) && DBOps
 				.getData("info", "2", "id", "time_stamp").get(0)
-				.equals(lastSent))) {
+				.equals("" + lastSent))) {
+			lastSent = Long.parseLong(DBOps.getData("info", "2", "id", "time_stamp").get(0));
 			messages.add((String) DBOps.getData("info", "2", "id","string_colour").get(0));
-			lastSent = (String) DBOps.getData("info", "2", "id", "time_stamp").get(0);
 			try {
 				updateChat();
 			} catch (BadLocationException e) {
 				e.printStackTrace();
 			}
 		}
+		
 	}
+	
 
+	private class ServerTime implements Runnable {
+
+		public void run() {
+			newTimer = new Timer(10000, new TimerListener());
+			newTimer.setInitialDelay(10000);
+			newTimer.start();
+		}
+	}
+	
+	private class TimerListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent arg0) {
+			try {
+				System.out.println(Long.parseLong(DBOps.getData("info", "2", "id", "time_stamp").get(0)));
+				System.out.println(getTimeStamp());
+				if (getTimeStamp() - Long.parseLong(DBOps.getData("info", "2", "id", "time_stamp").get(0))  >= 10) {
+					time = Integer.parseInt((DBOps.getData("info", "4", "id", "time_stamp")).get(0)) - 10;
+					DBOps.updateData("info", "time_stamp", "" + time, "id", "4");
+					String s = (DBOps.getData("scores", "1", "id", "Snake")).get(0);
+					String c = (DBOps.getData("scores", "1", "id", "Collector")).get(0);
+					if (time < 0) {
+						return;
+					}
+					else if (time != 0) {
+						DBOps.updateData("info", "string_colour", "SkyNet" + ": " + "Teams have " + time + " seconds. S: " + s + " C: " + c, "id", "2");
+						try {
+							DBOps.updateData("info", "time_stamp", "" + getTimeStamp(), "id", "2");
+						} catch (ParseException e1) {
+							e1.printStackTrace();
+						}
+					}
+					else {
+						String winner;
+						DBOps.updateData("info", "time_stamp", "False", "id", "3");
+						if (Integer.parseInt(s) > Integer.parseInt(c)) 
+							winner = "Snakes win!";
+						else if (Integer.parseInt(c) > Integer.parseInt(s))
+							winner = "Collectors win!";
+						else
+							winner = "It's a tie!";
+						DBOps.updateData("info", "string_colour", "SkyNet" + ": " + "Game Over! " + winner + " S: " + s + " C: " + c, "id", "2");
+						try {
+							DBOps.updateData("info", "time_stamp", "" + getTimeStamp(), "id", "2");
+						} catch (ParseException e1) {
+							e1.printStackTrace();
+						}
+						newTimer.stop();
+						
+						Driver.newPanel.mainPanel.setLayout(new FlowLayout());
+						Driver.newPanel.mainPanel.removeAll();
+						Driver.newPanel.mainPanel.setPreferredSize(null);
+
+						Driver.newPanel.mainPanel.add(new MenuPanel());
+						Driver.newPanel.chatPanel.setFocusable(true);
+
+						Driver.newPanel.chatPanel.messageField.setText("");
+						Driver.newPanel.chatPanel.messageField.setEditable(true);
+						Driver.newPanel.chatPanel.send.setEnabled(true);
+						
+						Driver.newPanel.revalidate(); Driver.newPanel.repaint();
+						
+						return;
+					}
+				}
+				else {
+					System.out.println("Running game");
+				}
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+		}
+	}
+	
+	private class UpdateChatThread implements Runnable {
+
+		public void run() {
+			messageArea.setText("\u200B");
+			messageArea.setLayout(new GridLayout(messages.size(),1));
+			
+			for (String m:messages) {
+				String[] textWords = m.split(" ");
+				String username = textWords[0].substring(0, textWords[0].length());
+				String message = m.substring(username.length(), m.length());
+				
+				StyleConstants.setForeground(keyWord, Color.RED);
+				try {
+					messageArea.getStyledDocument().insertString(messageArea.getText().length(),username, keyWord);
+					StyleConstants.setForeground(keyWord, Color.BLACK);
+					messageArea.getStyledDocument().insertString(messageArea.getText().length(),message + "\n", keyWord);
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				}
+			};
+			
+			messageArea.revalidate(); messageArea.repaint();
+			
+		}
+		
+	}
 }

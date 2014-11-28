@@ -47,7 +47,7 @@ public class Driver {
 					DBOps.updateData("users", "connected", "0", "user", currentUser.getName());
 					DBOps.updateData("info", "string_colour", "SkyNet" + ": " + currentUser.getName() + " ran away from chat.", "id", "2");
 					try {
-						DBOps.updateData("info", "time_stamp", Driver.newPanel.chatPanel.getTimeStamp(), "id", "2");
+						DBOps.updateData("info", "time_stamp", "" +  Driver.newPanel.chatPanel.getTimeStamp(), "id", "2");
 					} catch (ParseException e1) {
 						e1.printStackTrace();
 					}
@@ -81,5 +81,9 @@ public class Driver {
 			};
 		}
 		return onlineUsers;
+	}
+	
+	public static boolean returnRunning() {
+		return Boolean.parseBoolean((DBOps.getData("info", "3", "id", "time_stamp")).get(0));
 	}
 }

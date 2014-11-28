@@ -128,7 +128,7 @@ public class LoginPanel extends JPanel {
 							DBOps.updateData("users", "connected", "1", "user", u.getName());
 							DBOps.updateData("info", "string_colour", "SkyNet" + ": " + u.getName() + " has entered the fray.", "id", "2");
 							try {
-								DBOps.updateData("info", "time_stamp", Driver.newPanel.chatPanel.getTimeStamp(), "id", "2");
+								DBOps.updateData("info", "time_stamp", "" + Driver.newPanel.chatPanel.getTimeStamp(), "id", "2");
 							} catch (ParseException e1) {
 								e1.printStackTrace();
 							}
@@ -163,7 +163,7 @@ public class LoginPanel extends JPanel {
 							attemptName + "\", \"" + passwordField.getText() + "\", \"1");
 					DBOps.updateData("info", "string_colour", "SkyNet" + ": " + Driver.currentUser.getName() + " has become one of us.", "id", "2");
 					try {
-						DBOps.updateData("info", "time_stamp", Driver.newPanel.chatPanel.getTimeStamp(), "id", "2");
+						DBOps.updateData("info", "time_stamp", "" + Driver.newPanel.chatPanel.getTimeStamp(), "id", "2");
 					} catch (ParseException e1) {
 					}
 						
@@ -174,6 +174,7 @@ public class LoginPanel extends JPanel {
 				Driver.newPanel.mainPanel.setLayout(new FlowLayout());
 				Driver.newPanel.mainPanel.removeAll();
 				Driver.newPanel.mainPanel.setPreferredSize(null);
+				Driver.newPanel.mainPanel.setBackground(Color.MAGENTA);
 
 				Driver.newPanel.mainPanel.add(new MenuPanel());
 

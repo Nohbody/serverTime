@@ -256,7 +256,7 @@ public class GameApplet extends PApplet {
 	}
 
 	public void keyPressed() {
-
+	
 	  switch(key) {
 	    case('w'):
 	    mySnake.direction = UP;
