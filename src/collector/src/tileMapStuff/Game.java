@@ -21,6 +21,7 @@ public class Game extends JPanel
     boolean down = false;
     boolean right = false;
     boolean left = false;
+
     //some more stuff that im adding from the game canvas
     Map map = new Map();
     private ArrayList<Coin> coins;
