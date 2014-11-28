@@ -15,6 +15,7 @@ public class Entity {
 	private boolean grounded = false;
     protected int score = 0;
     protected Color playColor = new Color(233, 9, 76);
+    private Thread scoreThread = new Thread(new UpdateScore());
 
     public Entity(Map map, float x, float y)
     {
@@ -51,8 +52,8 @@ public class Entity {
             {
                 map.setClear((int)x, (int)y);
                 setScore(1);
-                int DBscore = Integer.parseInt((DBOps.getData("scores", "1", "id", "Collector")).get(0)) + 5;
-                DBOps.updateData("scores", "Collector", "" + DBscore, "id", "1");
+                scoreThread = new Thread(new UpdateScore());
+                scoreThread.start();
                 System.out.println(score);
             }
 			return true;
@@ -87,7 +88,7 @@ public class Entity {
     // check to see if Entity is grounded
     public boolean isGrounded()
     {
-        if (y >= map.TILE_SIZE * map.HEIGHT + 3)
+        if (y >= Map.TILE_SIZE * Map.HEIGHT + 3)
         {
             grounded = true;
         }
@@ -99,5 +100,15 @@ public class Entity {
 		int yp = (int) (Map.TILE_SIZE * y);
 		g.setColor(playColor);
         g.fill3DRect(xp, yp, 18, 18, true);
+	}
+	
+	private class UpdateScore implements Runnable {
+
+		public void run() {
+			int DBscore = Integer.parseInt((DBOps.getData("scores", "1", "id", "Collector")).get(0)) + 5;
+            DBOps.updateData("scores", "Collector", "" + DBscore, "id", "1");
+            return;
+		}
+		
 	}
 }

@@ -9,11 +9,10 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 //sept 2013
-//purpose: a main
+//purpose: a main panel for the player and prince to do battle
 
-public class Game extends JPanel implements Runnable
+public class Game extends JPanel
 {
-
     private final int height = 270;
     private final int length = 450;
     private Color myPurp = new Color(150, 0, 220);
@@ -22,15 +21,13 @@ public class Game extends JPanel implements Runnable
     boolean down = false;
     boolean right = false;
     boolean left = false;
-    private Thread t, dbThread;
     //some more stuff that im adding from the game canvas
     Map map = new Map();
-
     private ArrayList<Coin> coins;
     Coin myCoin;
-    private float gravity = 0.05f;
+    private float gravity = 0.3f;
     Entity player;
-    Timer myTimer;
+
     //constructor
     public Game()
     {
@@ -41,36 +38,13 @@ public class Game extends JPanel implements Runnable
         setBackground(Color.black);
         setPreferredSize(new Dimension(length, height));
         setFocusable(true);
-        myTimer = new Timer(12, new GameLoop());
-        dbThread = new Thread(new dbStuff(), "dbThread");
-
-        t = new Thread(this, "gameThread");
-        t.start();
-    }
-
-    @Override
-    public void run()
-    {
+        Timer myTimer = new Timer(12, new GameLoop());
         myTimer.start();
-        dbThread.start();
     }
-    private class dbStuff implements Runnable
-    {
-        public void run()
-        {
-            //begin to connect to the database
-//            String userName = "chris";
-//            String userIdString = DBOps.getData("users", userName, userName, "id").get(0);
-//            int userId = Integer.parseInt(userIdString);
-//            DBOps.getData("player", "", "id", "string_colour").get(0);
-            while (true)
-            {
 
-            }
-        }
-    }
     private class GameLoop implements ActionListener
     {
+
         public void actionPerformed(ActionEvent arg0)
         {
             requestFocus();
@@ -90,6 +64,11 @@ public class Game extends JPanel implements Runnable
                 }
             }
             map.setClosest((int) currX, (int) currY);
+            //begin to connect to the database
+      /*      String userName = "chris";
+            String userIdString = DBOps.getData("users", userName, userName, "id").get(0);
+            int userId = Integer.parseInt(userIdString);
+            DBOps.getData("player", "", "id", "string_colour").get(0);*/
 
             repaint();
             logic();
@@ -103,9 +82,9 @@ public class Game extends JPanel implements Runnable
         float dx = 0;
         float dy = 0;
         float speed = 2.5f;
-        float jump = 9.0f;
+        float jump = 20.0f;
         float downPound = 2f;
-        float smoothing = 0.04f;
+        float smoothing = 0.03f;
         if (left)
         {
             dx -= speed;

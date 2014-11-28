@@ -1,7 +1,6 @@
 
 package snake;
 
-
 import main.DBOps;
 import processing.core.*;
 
@@ -19,6 +18,7 @@ public class GameApplet extends PApplet {
 	int score2;
 	boolean gameOver;
 	double curClosest = 10000;
+	private Thread scoreThread = new Thread(new UpdateScore());
 	
     static public void main(String args[]) {
         PApplet.main(new String[] { "snake.GameApplet" });
@@ -27,7 +27,7 @@ public class GameApplet extends PApplet {
 	public void setup() {
 	  size(300, 300);
 	  background(0);
-	  frameRate(10);
+	  frameRate(20);
 	  
 	  mySnake = new Snake(color(255,0,0), width/2 - 100, height/2, 10, false);
 //	  mySnake2 = new snake(color(0, 0, 255), width/2 + 100, height/2, 10, false);
@@ -169,8 +169,8 @@ public class GameApplet extends PApplet {
 	    for (int i = 0; i < 5; i++) {
 		    if (detectHit(mySnake, myBlocks[i])) {
 		      myBlocks[i] = new Block(color(0, 255, 0));
-		      int score = Integer.parseInt((DBOps.getData("scores", "1", "id", "snake")).get(0)) + 5;
-		      DBOps.updateData("scores", "snake", "" + score, "id", "1");
+		      scoreThread = new Thread(new UpdateScore());
+              scoreThread.start();
 		      mySnake.snakeSize++;
 		    }
 	    }
@@ -398,8 +398,8 @@ public class GameApplet extends PApplet {
 
 	  Block(int c) { 
 	    displayColor = c;
-	    xpos = (int)random(width-10);
-	    ypos = (int)random(height-30) + 20;
+	    xpos = (int)random(width/10-1)*10;
+	    ypos = (int)random(height/10-3)*10 + 20;
 	    savedTime = millis();
 	  }
 
@@ -418,13 +418,13 @@ public class GameApplet extends PApplet {
 
 	boolean detectHit(Snake a, Block b) {
 
-	  if (a.partsX[0] + 10 < b.xpos)
+	  if (a.partsX[0] + 9 < b.xpos)
 	    return false;
-	  else if (a.partsX[0] > b.xpos + 10)
+	  else if (a.partsX[0] > b.xpos + 9)
 	    return false;
-	  else if (a.partsY[0] + 10 < b.ypos) 
+	  else if (a.partsY[0] + 9 < b.ypos) 
 	    return false;
-	  else if (a.partsY[0] > b.ypos + 10)
+	  else if (a.partsY[0] > b.ypos + 9)
 	    return false;
 
 	  else {
@@ -459,13 +459,13 @@ public class GameApplet extends PApplet {
 
 	    boolean hit = true;
 
-	    if (a.partsX[0] + 10 <= b.partsX[i])
+	    if (a.partsX[0] + 9 <= b.partsX[i])
 	      hit = false;
-	    else if (a.partsX[0] >= b.partsX[i] + 10) 
+	    else if (a.partsX[0] >= b.partsX[i] + 9) 
 	      hit = false;
-	    else if (a.partsY[0] + 10 <= b.partsY[i])
+	    else if (a.partsY[0] + 9 <= b.partsY[i])
 	      hit = false;
-	    else if (a.partsY[0] >= b.partsY[i] + 10)
+	    else if (a.partsY[0] >= b.partsY[i] + 9)
 	      hit = false;
 
 	    if (hit)
@@ -479,7 +479,7 @@ public class GameApplet extends PApplet {
 		curClosest = 10000;
 		for (int i = 0; i < 5; i++) {
 			double temp = Math.sqrt(Math.pow((mySnake.partsX[0] - myBlocks[i].xpos),2) + Math.pow((mySnake.partsY[0] - myBlocks[i].ypos),2));
-			System.out.println("Temp: " + temp + "\tCurrent: " + curClosest);
+//			System.out.println("Temp: " + temp + "\tCurrent: " + curClosest);
 			if (temp < curClosest) {
 				curClosest = temp;
 				
@@ -487,6 +487,16 @@ public class GameApplet extends PApplet {
 					myBlocks[j].displayColor = color(0,255,0);
 				myBlocks[i].displayColor = color(255,0,0);
 			}
+		}
+		
+	}
+	
+	private class UpdateScore implements Runnable {
+
+		public void run() {
+			int DBscore = Integer.parseInt((DBOps.getData("scores", "1", "id", "Snake")).get(0)) + 5;
+            DBOps.updateData("scores", "Snake", "" + DBscore, "id", "1");
+            return;
 		}
 		
 	}
