@@ -30,14 +30,26 @@ public class MenuPanel extends JPanel {
 	public GridBagLayout gLayout;
 	public GridBagConstraints c;
     public Game game;
+    public Timer enabler = new Timer(1000, new EnableButton());
 	
 	public MenuPanel() {
 		snake = new JButton("Snake");
 			snake.addActionListener(new MenuButton());
+			snake.setFocusPainted(false);
+			snake.setBackground(Color.RED);
 		collector = new JButton("Collector");
 			collector.addActionListener(new MenuButton());
+			collector.setFocusPainted(false);
+			collector.setBackground(Color.GREEN);
 		stats = new JButton("Stats");
 			stats.addActionListener(new MenuButton());
+			stats.setFocusPainted(false);
+			stats.setBackground(Color.CYAN);
+		
+		if (Driver.returnRunning() == false) {
+			snake.setEnabled(false);
+			collector.setEnabled(false);
+		}
 
 		gLayout = new GridBagLayout();
 		c = new GridBagConstraints();
@@ -56,6 +68,7 @@ public class MenuPanel extends JPanel {
 		c.gridy = 2;
 		add(stats,c);
 		
+		enabler.start();
 	}
 
 
@@ -76,6 +89,12 @@ public class MenuPanel extends JPanel {
 				Driver.newPanel.mainPanel.add(gamePanel);
 				Driver.newPanel.mainPanel.setBackground(Color.MAGENTA);
 				
+				Driver.newPanel.chatPanel.setFocusable(false);
+				
+				Driver.newPanel.chatPanel.messageField.setEditable(false);
+				Driver.newPanel.chatPanel.messageField.setText("Help your team win!");
+				Driver.newPanel.chatPanel.send.setEnabled(false);
+				
 				Driver.newPanel.revalidate(); Driver.newPanel.repaint();
 	        }
 			else if (e.getSource() == snake) {
@@ -91,6 +110,12 @@ public class MenuPanel extends JPanel {
 				Driver.newPanel.mainPanel.add(gamePanel);
 				Driver.newPanel.mainPanel.setBackground(Color.MAGENTA);
 				
+				Driver.newPanel.chatPanel.setFocusable(false);
+				
+				Driver.newPanel.chatPanel.messageField.setEditable(false);
+				Driver.newPanel.chatPanel.messageField.setText("Help your team win!");
+				Driver.newPanel.chatPanel.send.setEnabled(false);
+				
 				Driver.newPanel.revalidate(); Driver.newPanel.repaint();
 				
 			}
@@ -100,6 +125,16 @@ public class MenuPanel extends JPanel {
 			
 		}
 		
+	}
+
+	private class EnableButton implements ActionListener{
+
+		public void actionPerformed(ActionEvent arg0) {
+			if (Driver.returnRunning() == true) {
+				snake.setEnabled(true);
+				collector.setEnabled(true);
+			}
+		}
 	}
 
 }

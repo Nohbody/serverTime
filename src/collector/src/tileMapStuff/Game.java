@@ -1,6 +1,7 @@
 package collector.src.tileMapStuff;//Chris Murphy
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +14,8 @@ import java.util.ArrayList;
 
 public class Game extends JPanel
 {
-    private final int height = 270;
+	private static final long serialVersionUID = 1L;
+	private final int height = 270;
     private final int length = 450;
     private Color myPurp = new Color(150, 0, 220);
     //booleas for which key is pressed
@@ -21,7 +23,6 @@ public class Game extends JPanel
     boolean down = false;
     boolean right = false;
     boolean left = false;
-
     //some more stuff that im adding from the game canvas
     Map map = new Map();
     private ArrayList<Coin> coins;
