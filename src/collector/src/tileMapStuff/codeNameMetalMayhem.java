@@ -9,7 +9,9 @@ import java.io.FileNotFoundException;
 public class codeNameMetalMayhem extends JFrame
 {
 
-    /**
+	private static final long serialVersionUID = 1L;
+
+	/**
      * @param args
      * this class only exists so that i can test the game without signing in
      * everytime

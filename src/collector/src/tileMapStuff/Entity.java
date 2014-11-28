@@ -88,7 +88,7 @@ public class Entity {
     // check to see if Entity is grounded
     public boolean isGrounded()
     {
-        if (y >= map.TILE_SIZE * map.HEIGHT + 3)
+        if (y >= Map.TILE_SIZE * Map.HEIGHT + 3)
         {
             grounded = true;
         }

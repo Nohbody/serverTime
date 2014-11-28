@@ -24,10 +24,10 @@ public class Coin extends Entity
         // x/y position and the size that tiles are being rendered at. So
         // if we're at 1.5,1.5 and the tile size is 10 we'd render on screen
         // at 15,15.
-        int xp = (int) (map.TILE_SIZE * x);
-        int yp = (int) (map.TILE_SIZE * y);
+        int xp = (int) (Map.TILE_SIZE * x);
+        int yp = (int) (Map.TILE_SIZE * y);
         g.setColor(new Color(222, 104, 244));
-        g.drawRect (xp ,yp , map.TILE_SIZE, map.TILE_SIZE);
+        g.drawRect (xp ,yp , Map.TILE_SIZE, Map.TILE_SIZE);
 
     }
     //proximity detection
