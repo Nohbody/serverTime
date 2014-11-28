@@ -1,5 +1,7 @@
 package collector.src.tileMapStuff;//Chris Murphy
 
+import main.DBOps;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,10 +24,10 @@ public class Game extends JPanel implements Runnable
     boolean down = false;
     boolean right = false;
     boolean left = false;
+    private String dbString = "", DBscore = "";
     private Thread t, dbThread;
     //some more stuff that im adding from the game canvas
     Map map = new Map();
-
     private ArrayList<Coin> coins;
     Coin myCoin;
     private float gravity = 0.05f;
@@ -42,8 +44,6 @@ public class Game extends JPanel implements Runnable
         setPreferredSize(new Dimension(length, height));
         setFocusable(true);
         myTimer = new Timer(12, new GameLoop());
-        dbThread = new Thread(new dbStuff(), "dbThread");
-
         t = new Thread(this, "gameThread");
         t.start();
     }
@@ -52,21 +52,16 @@ public class Game extends JPanel implements Runnable
     public void run()
     {
         myTimer.start();
-        dbThread.start();
+
     }
     private class dbStuff implements Runnable
     {
         public void run()
         {
-            //begin to connect to the database
-//            String userName = "chris";
-//            String userIdString = DBOps.getData("users", userName, userName, "id").get(0);
-//            int userId = Integer.parseInt(userIdString);
-//            DBOps.getData("player", "", "id", "string_colour").get(0);
-            while (true)
-            {
-
-            }
+			DBscore = (DBOps.getData("player", "1", "id", "CloseBlock")).get(0);
+            DBOps.updateData("player", "CloseBlock", "" + dbString, "id", "1");
+            System.out.println("what up now im geting connected\n" + DBscore);
+            return;
         }
     }
     private class GameLoop implements ActionListener
@@ -90,7 +85,9 @@ public class Game extends JPanel implements Runnable
                 }
             }
             map.setClosest((int) currX, (int) currY);
-
+            dbString = "blockC";
+            dbThread = new Thread(new dbStuff(), "dbThread");
+            dbThread.start();
             repaint();
             logic();
         }

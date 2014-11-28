@@ -160,9 +160,11 @@ public class Map
                 {
                     data[xCount][yCount] = COIN;
                 }
+                data[x][y] = CLOSEST;
             }
+            //data[x][y] = CLOSEST;
         }
-        data[x][y] = CLOSEST;
+
     }
 
     //method to replace the coin in a new and random space
