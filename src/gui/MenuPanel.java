@@ -78,6 +78,7 @@ public class MenuPanel extends JPanel {
 	private class MenuButton implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
+			enabler.stop();
 			if (e.getSource() == collector)
 	        {
 				Driver.playingCollector = true;
