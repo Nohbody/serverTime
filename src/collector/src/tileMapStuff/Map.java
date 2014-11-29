@@ -160,11 +160,11 @@ public class Map
                 {
                     data[xCount][yCount] = COIN;
                 }
-                data[x][y] = CLOSEST;
+
             }
             //data[x][y] = CLOSEST;
         }
-
+    data[x][y] = CLOSEST;
     }
 
     //method to replace the coin in a new and random space
@@ -173,7 +173,7 @@ public class Map
         Random rand = new Random();
         int x = rand.nextInt(WIDTH);
         int y = rand.nextInt(HEIGHT);
-        if (data[x][y] != BLOCKED && data[x][y] != COIN)
+        if ((data[x][y] != BLOCKED && data[x][y] != COIN) || (data[x][y] != CLOSEST && data[x][y] != BLOCKED))
         {
             data[x][y] = COIN;
         }

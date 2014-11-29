@@ -11,7 +11,7 @@ public class Entity {
 	protected float y;
 	protected Map map;
 	/** The size of this entity, this is used to calculate collisions with walls */
-	private float size = 0.5f;
+	private float size = 0.55f;
 	private boolean grounded = false;
     protected int score = 0;
     protected Color playColor = new Color(233, 9, 76);
@@ -99,7 +99,7 @@ public class Entity {
 		int xp = (int) (Map.TILE_SIZE * x);
 		int yp = (int) (Map.TILE_SIZE * y);
 		g.setColor(playColor);
-        g.fill3DRect(xp-5, yp-5, 11, 11, true);
+        g.fill3DRect(xp, yp-5, 11, 11, true);
 	}
 	
 	private class UpdateScore implements Runnable {

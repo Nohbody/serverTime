@@ -30,7 +30,7 @@ public class Game extends JPanel implements Runnable
     Map map = new Map();
     private ArrayList<Coin> coins;
     Coin myCoin;
-    private float gravity = 0.05f;
+    private float gravity = 0.048f;
     Entity player;
     Timer myTimer;
     //constructor
@@ -58,7 +58,13 @@ public class Game extends JPanel implements Runnable
     {
         public void run()
         {
-			DBscore = (DBOps.getData("player", "1", "id", "CloseBlock")).get(0);
+			try
+            {
+                DBscore = (DBOps.getData("player", "1", "id", "CloseBlock")).get(0);
+            } catch (NullPointerException e)
+            {
+                System.out.print("that database get failed");
+            }
             DBOps.updateData("player", "CloseBlock", "" + dbString, "id", "1");
             System.out.println("what up now im geting connected\n" + DBscore);
             return;
@@ -85,7 +91,7 @@ public class Game extends JPanel implements Runnable
                 }
             }
             map.setClosest((int) currX, (int) currY);
-            dbString = "blockC";
+            dbString = "blockB";
             dbThread = new Thread(new dbStuff(), "dbThread");
             dbThread.start();
             repaint();
