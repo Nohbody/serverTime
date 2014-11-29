@@ -13,9 +13,9 @@ import java.util.ArrayList;
 //sept 2013
 //purpose: a main
 
-public class Game extends JPanel implements Runnable
+public class Game extends JPanel
 {
-
+    private static final long serialVersionUID = 1L;
     private final int height = 270;
     private final int length = 450;
     private Color myPurp = new Color(150, 0, 220);
@@ -45,16 +45,11 @@ public class Game extends JPanel implements Runnable
         setPreferredSize(new Dimension(length, height));
         setFocusable(true);
         myTimer = new Timer(12, new GameLoop());
-        t = new Thread(this, "gameThread");
-        t.start();
-    }
 
-    @Override
-    public void run()
-    {
         myTimer.start();
-
     }
+
+
     private class dbStuff implements Runnable
     {
         public void run()
