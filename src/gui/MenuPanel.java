@@ -154,6 +154,10 @@ public class MenuPanel extends JPanel {
 				snake.setEnabled(true);
 				collector.setEnabled(true);
 			}
+			else {
+				snake.setEnabled(false);
+				collector.setEnabled(false);
+			}
 		}
 	}
 

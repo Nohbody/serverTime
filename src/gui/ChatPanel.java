@@ -190,7 +190,7 @@ public class ChatPanel extends JPanel {
 			while(isRunning) {
 				try {
 					int tempTime = Integer.parseInt((DBOps.getData("info", "4", "id", "time_stamp")).get(0)) - 10;
-					if (getTimeStamp() - Long.parseLong(DBOps.getData("info", "2", "id", "time_stamp").get(0))  >= 10 && Driver.returnRunning()) {
+					if (getTimeStamp() - Long.parseLong(DBOps.getData("info", "5", "id", "time_stamp").get(0))  >= 10 && Driver.returnRunning()) {
 						if (tempTime >= 0)
 							time = tempTime;
 						DBOps.updateData("info", "time_stamp", "" + time, "id", "4");
@@ -200,6 +200,7 @@ public class ChatPanel extends JPanel {
 						if (time > 0) {
 							DBOps.updateData("info", "string_colour", "SkyNet" + ": " + "Teams have " + time + " seconds. S: " + s + " C: " + c, "id", "2");
 							try {
+								DBOps.updateData("info", "time_stamp", "" + getTimeStamp(), "id", "5");
 								DBOps.updateData("info", "time_stamp", "" + getTimeStamp(), "id", "2");
 							} catch (ParseException e1) {
 								e1.printStackTrace();
