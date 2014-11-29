@@ -29,7 +29,7 @@ public class MenuPanel extends JPanel {
 	public JButton snake, collector, stats;
 	public GridBagLayout gLayout;
 	public GridBagConstraints c;
-    public Game game;
+    public Game collectorGame;
     public Timer enabler = new Timer(1000, new EnableButton());
 	
 	public MenuPanel() {
@@ -49,6 +49,8 @@ public class MenuPanel extends JPanel {
 		if (Driver.returnRunning() == false) {
 			snake.setEnabled(false);
 			collector.setEnabled(false);
+			if (collectorGame != null)
+				collectorGame.myTimer.stop();
 		}
 
 		gLayout = new GridBagLayout();
@@ -80,7 +82,6 @@ public class MenuPanel extends JPanel {
 				Driver.newPanel.mainPanel.setLayout(new FlowLayout());
 				Driver.newPanel.mainPanel.removeAll();
 				Driver.newPanel.mainPanel.setPreferredSize(null);
-				Game collectorGame;
 				collectorGame = new Game();
 					JPanel gamePanel = new JPanel();
 						gamePanel.setPreferredSize(new Dimension(450,270));

@@ -28,7 +28,7 @@ public class GameApplet extends PApplet {
 	  size(300, 300);
 	  background(0);
 	  frameRate(20);
-	  
+
 	  mySnake = new Snake(color(255,0,0), width/2 - 100, height/2, 10, false);
 //	  mySnake2 = new snake(color(0, 0, 255), width/2 + 100, height/2, 10, false);
 	  mySnake.snakeSize = 1;
