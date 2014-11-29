@@ -17,6 +17,7 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.TimeZone;
 
 
 public class Driver {
@@ -37,6 +38,7 @@ public class Driver {
 		displayFrame.setLayout(new BorderLayout());	
 		
 		newPanel = new GUI();
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
 		
 		displayFrame.getContentPane().add(newPanel);
 		

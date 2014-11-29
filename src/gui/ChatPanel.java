@@ -68,9 +68,6 @@ public class ChatPanel extends JPanel implements Runnable{
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		messagePane = new JScrollPane(messageArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			messagePane.setPreferredSize(new Dimension(450, 80));
-		
-		myTimer = new Thread(new ServerTime());
-		myTimer.start();
 			
 		messages.add("SkyNet: Welcome to Server Time Chat! Available commands: /users, /start");
 		
@@ -127,8 +124,6 @@ public class ChatPanel extends JPanel implements Runnable{
 			
 			else if (messageField.getText().equals("/start")) {
 				if (Driver.returnRunning() == false) {
-					myTimer = new Thread(new ServerTime());
-					myTimer.start();
 					
 					DBOps.updateData("info", "time_stamp", "True", "id", "3");
 					DBOps.updateData("scores", "Collector", "" + 0, "id", "1");
@@ -194,85 +189,97 @@ public class ChatPanel extends JPanel implements Runnable{
 				e.printStackTrace();
 			}
 		}
+	}
+	
+
+	class ServerTime implements Runnable {
+		private volatile boolean isRunning;
 		
-	}
-	
-
-	private class ServerTime implements Runnable {
-
 		public void run() {
-			newTimer = new Timer(10000, new TimerListener());
-			newTimer.setInitialDelay(10000);
-			newTimer.start();
-		}
-	}
+			if (Driver.currentUser != null)
+				isRunning = true;
+			while(isRunning) {
+				try {
+					System.out.println(Long.parseLong(DBOps.getData("info", "2", "id", "time_stamp").get(0)));
+					System.out.println(getTimeStamp());
+					int tempTime = Integer.parseInt((DBOps.getData("info", "4", "id", "time_stamp")).get(0)) - 10;
+					if (getTimeStamp() - Long.parseLong(DBOps.getData("info", "2", "id", "time_stamp").get(0))  >= 10 && Driver.returnRunning()) {
+						if (Integer.parseInt((DBOps.getData("info", "4", "id", "time_stamp")).get(0)) - 10 >= 0)
+							time = tempTime;
+						DBOps.updateData("info", "time_stamp", "" + time, "id", "4");
+						String s = (DBOps.getData("scores", "1", "id", "Snake")).get(0);
+						String c = (DBOps.getData("scores", "1", "id", "Collector")).get(0);
 	
-	private class TimerListener implements ActionListener {
-
-		public void actionPerformed(ActionEvent arg0) {
-			try {
-				System.out.println(Long.parseLong(DBOps.getData("info", "2", "id", "time_stamp").get(0)));
-				System.out.println(getTimeStamp());
-				if (getTimeStamp() - Long.parseLong(DBOps.getData("info", "2", "id", "time_stamp").get(0))  >= 10) {
-					time = Integer.parseInt((DBOps.getData("info", "4", "id", "time_stamp")).get(0)) - 10;
-					DBOps.updateData("info", "time_stamp", "" + time, "id", "4");
-					String s = (DBOps.getData("scores", "1", "id", "Snake")).get(0);
-					String c = (DBOps.getData("scores", "1", "id", "Collector")).get(0);
-					if (time < 0) {
-						return;
-					}
-					else if (time != 0) {
-						DBOps.updateData("info", "string_colour", "SkyNet" + ": " + "Teams have " + time + " seconds. S: " + s + " C: " + c, "id", "2");
-						try {
-							DBOps.updateData("info", "time_stamp", "" + getTimeStamp(), "id", "2");
-						} catch (ParseException e1) {
-							e1.printStackTrace();
+						if (time > 0) {
+							DBOps.updateData("info", "string_colour", "SkyNet" + ": " + "Teams have " + time + " seconds. S: " + s + " C: " + c, "id", "2");
+							try {
+								DBOps.updateData("info", "time_stamp", "" + getTimeStamp(), "id", "2");
+							} catch (ParseException e1) {
+								e1.printStackTrace();
+							}
+						}
+						else {
+							String winner;
+							DBOps.updateData("info", "time_stamp", "False", "id", "3");
+							if (Integer.parseInt(s) > Integer.parseInt(c)) 
+								winner = "Snakes win!";
+							else if (Integer.parseInt(c) > Integer.parseInt(s))
+								winner = "Collectors win!";
+							else
+								winner = "It's a tie!";
+							DBOps.updateData("info", "string_colour", "SkyNet" + ": " + "Game Over! " + winner + " S: " + s + " C: " + c, "id", "2");
+							try {
+								DBOps.updateData("info", "time_stamp", "" + getTimeStamp(), "id", "2");
+							} catch (ParseException e1) {
+								e1.printStackTrace();
+							}
+							isRunning = false;
+							
+							Driver.newPanel.mainPanel.setLayout(new FlowLayout());
+							Driver.newPanel.mainPanel.removeAll();
+							Driver.newPanel.mainPanel.setPreferredSize(null);
+	
+							Driver.newPanel.mainPanel.add(new MenuPanel());
+							Driver.newPanel.chatPanel.setFocusable(true);
+	
+							Driver.newPanel.chatPanel.messageField.setText("");
+							Driver.newPanel.chatPanel.messageField.setEditable(true);
+							Driver.newPanel.chatPanel.send.setEnabled(true);
+							
+							Driver.newPanel.revalidate(); Driver.newPanel.repaint();
+							
+							return;
 						}
 					}
 					else {
-						String winner;
-						DBOps.updateData("info", "time_stamp", "False", "id", "3");
-						if (Integer.parseInt(s) > Integer.parseInt(c)) 
-							winner = "Snakes win!";
-						else if (Integer.parseInt(c) > Integer.parseInt(s))
-							winner = "Collectors win!";
-						else
-							winner = "It's a tie!";
-						DBOps.updateData("info", "string_colour", "SkyNet" + ": " + "Game Over! " + winner + " S: " + s + " C: " + c, "id", "2");
-						try {
-							DBOps.updateData("info", "time_stamp", "" + getTimeStamp(), "id", "2");
-						} catch (ParseException e1) {
-							e1.printStackTrace();
+						if (Driver.returnRunning() == false) {
+							isRunning = false;
+							Driver.newPanel.mainPanel.setLayout(new FlowLayout());
+							Driver.newPanel.mainPanel.removeAll();
+							Driver.newPanel.mainPanel.setPreferredSize(null);
+	
+							Driver.newPanel.mainPanel.add(new MenuPanel());
+							Driver.newPanel.chatPanel.setFocusable(true);
+	
+							Driver.newPanel.chatPanel.messageField.setText("");
+							Driver.newPanel.chatPanel.messageField.setEditable(true);
+							Driver.newPanel.chatPanel.send.setEnabled(true);
+							
+							Driver.newPanel.revalidate(); Driver.newPanel.repaint();
+							
+							return;
 						}
-						newTimer.stop();
-						
-						Driver.newPanel.mainPanel.setLayout(new FlowLayout());
-						Driver.newPanel.mainPanel.removeAll();
-						Driver.newPanel.mainPanel.setPreferredSize(null);
-
-						Driver.newPanel.mainPanel.add(new MenuPanel());
-						Driver.newPanel.chatPanel.setFocusable(true);
-
-						Driver.newPanel.chatPanel.messageField.setText("");
-						Driver.newPanel.chatPanel.messageField.setEditable(true);
-						Driver.newPanel.chatPanel.send.setEnabled(true);
-						
-						Driver.newPanel.revalidate(); Driver.newPanel.repaint();
-						
-						return;
 					}
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				} catch (ParseException e) {
+					e.printStackTrace();
 				}
-				else {
-					System.out.println("Running game");
-				}
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			} catch (ParseException e) {
-				e.printStackTrace();
 			}
-			
 		}
 	}
+	
+
 	
 	private class UpdateChatThread implements Runnable {
 
@@ -298,6 +305,10 @@ public class ChatPanel extends JPanel implements Runnable{
 			messageArea.revalidate(); messageArea.repaint();
 			
 		}
-		
+	}
+	
+	public void restartThread() {
+		myTimer = new Thread(new ServerTime());
+		myTimer.start();
 	}
 }

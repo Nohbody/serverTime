@@ -1,9 +1,9 @@
 package gui;
 
 import collector.src.tileMapStuff.Game;
+import gui.ChatPanel.ServerTime;
 
 import javax.swing.*;
-
 
 import processing.core.PApplet;
 import snake.GameApplet;
@@ -95,6 +95,7 @@ public class MenuPanel extends JPanel {
 				Driver.newPanel.chatPanel.messageField.setText("Help your team win!");
 				Driver.newPanel.chatPanel.send.setEnabled(false);
 				
+				Driver.newPanel.chatPanel.restartThread();
 				Driver.newPanel.revalidate(); Driver.newPanel.repaint();
 	        }
 			else if (e.getSource() == snake) {
@@ -115,6 +116,8 @@ public class MenuPanel extends JPanel {
 				Driver.newPanel.chatPanel.messageField.setEditable(false);
 				Driver.newPanel.chatPanel.messageField.setText("Help your team win!");
 				Driver.newPanel.chatPanel.send.setEnabled(false);
+				
+				Driver.newPanel.chatPanel.restartThread();
 				
 				Driver.newPanel.revalidate(); Driver.newPanel.repaint();
 				
