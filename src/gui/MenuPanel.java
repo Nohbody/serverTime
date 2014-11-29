@@ -7,6 +7,7 @@ import javax.swing.*;
 
 import processing.core.PApplet;
 import snake.GameApplet;
+import main.DBOps;
 import main.Driver;
 
 import java.awt.*;
@@ -79,6 +80,10 @@ public class MenuPanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == collector)
 	        {
+				Driver.playingCollector = true;
+				int DBscore = Integer.parseInt((DBOps.getData("users", Driver.currentUser.getName(), "user", "playedCollector")).get(0)) + 1;
+				DBOps.updateData("users", "playedCollector", "" + DBscore, "user", Driver.currentUser.getName() );
+				
 				Driver.newPanel.mainPanel.setLayout(new FlowLayout());
 				Driver.newPanel.mainPanel.removeAll();
 				Driver.newPanel.mainPanel.setPreferredSize(null);
@@ -100,6 +105,10 @@ public class MenuPanel extends JPanel {
 				Driver.newPanel.revalidate(); Driver.newPanel.repaint();
 	        }
 			else if (e.getSource() == snake) {
+				Driver.playingSnake = true;
+				int DBscore = Integer.parseInt((DBOps.getData("users", Driver.currentUser.getName(), "user", "playedSnake")).get(0)) + 1;
+				DBOps.updateData("users", "playedSnake", "" + DBscore, "user", Driver.currentUser.getName() );
+				
 				Driver.newPanel.mainPanel.setLayout(new FlowLayout());
 				Driver.newPanel.mainPanel.removeAll();
 				Driver.newPanel.mainPanel.setPreferredSize(null);
@@ -124,7 +133,13 @@ public class MenuPanel extends JPanel {
 				
 			}
 			else if (e.getSource() == stats) {
-				System.out.println("This guy wants to view stats.");
+				Driver.newPanel.mainPanel.setLayout(new FlowLayout());
+				Driver.newPanel.mainPanel.removeAll();
+				Driver.newPanel.mainPanel.setPreferredSize(null);
+				Driver.newPanel.mainPanel.add(new StatsPanel());
+				Driver.newPanel.mainPanel.setBackground(Color.MAGENTA);
+				
+				Driver.newPanel.revalidate(); Driver.newPanel.repaint();
 			}
 			
 		}

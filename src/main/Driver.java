@@ -26,6 +26,8 @@ public class Driver {
 	public static JFrame displayFrame;
 	public static ArrayList<User> users;
 	public static User currentUser;
+	public static boolean playingSnake;
+	public static boolean playingCollector;
 
 	public static void main(String[] args) throws IOException, ParseException, BadLocationException {
 		DBOps.connect();

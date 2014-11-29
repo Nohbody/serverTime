@@ -2,6 +2,7 @@
 package snake;
 
 import main.DBOps;
+import main.Driver;
 import processing.core.*;
 
 
@@ -496,6 +497,8 @@ public class GameApplet extends PApplet {
 		public void run() {
 			int DBscore = Integer.parseInt((DBOps.getData("scores", "1", "id", "Snake")).get(0)) + 5;
             DBOps.updateData("scores", "Snake", "" + DBscore, "id", "1");
+            DBscore = Integer.parseInt((DBOps.getData("users", Driver.currentUser.getName(), "user", "scoredSnake")).get(0)) + 5;
+			DBOps.updateData("users", "scoredSnake", "" + DBscore, "user", Driver.currentUser.getName() );
             return;
 		}
 		

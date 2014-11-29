@@ -14,6 +14,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
 import main.DBOps;
 import main.Driver;
 import main.User;
@@ -127,6 +128,8 @@ public class LoginPanel extends JPanel {
 							Driver.currentUser = new User(u.getName(), passwordField.getText());
 							DBOps.updateData("users", "connected", "1", "user", u.getName());
 							DBOps.updateData("info", "string_colour", "SkyNet" + ": " + u.getName() + " has entered the fray.", "id", "2");
+							int DBscore = Integer.parseInt((DBOps.getData("users", Driver.currentUser.getName(), "user", "loggedIn")).get(0)) + 1;
+							DBOps.updateData("users", "loggedIn", "" + DBscore, "user", Driver.currentUser.getName() );
 							try {
 								DBOps.updateData("info", "time_stamp", "" + Driver.newPanel.chatPanel.getTimeStamp(), "id", "2");
 							} catch (ParseException e1) {

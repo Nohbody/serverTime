@@ -36,7 +36,6 @@ public class GUI extends JPanel{
 	public JLabel credits, title;
 	public GridBagLayout gLayout;
 	public GridBagConstraints c;
-	private ScheduledThreadPoolExecutor poolExecutor;
 
 	
 	public GUI() throws ParseException, BadLocationException {
@@ -59,10 +58,6 @@ public class GUI extends JPanel{
 		chatPanel = new ChatPanel();
 			chatPanel.setBackground(Color.BLACK);
 			chatPanel.setBorder(new MatteBorder(2,0,0,0,Color.MAGENTA));
-			
-		poolExecutor = new ScheduledThreadPoolExecutor(1);
-		poolExecutor.scheduleAtFixedRate(chatPanel, (long) 1000, (long) 1000, TimeUnit.MILLISECONDS);
-		
 
 		setPreferredSize(new Dimension(500, 600));
 

@@ -35,7 +35,7 @@ Purpose: Layout for chatting
 Author: Adam Clemons
 ************************************************************* */
 
-public class ChatPanel extends JPanel implements Runnable{
+public class ChatPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	public ArrayList<String> messages;
@@ -50,6 +50,7 @@ public class ChatPanel extends JPanel implements Runnable{
 	public Thread myTimer, updateThread;
 	public Timer newTimer;
 	public int time;
+	private Thread checkThread = new Thread(new ChatChecker());
 	
 	
 	public ChatPanel() throws ParseException, BadLocationException {
@@ -98,7 +99,7 @@ public class ChatPanel extends JPanel implements Runnable{
 		c.gridy = 1;
 		add(send,c);
 		
-		updateChat();
+		checkThread.start();
 	}
 	
 	public void updateChat() throws BadLocationException {
@@ -151,6 +152,8 @@ public class ChatPanel extends JPanel implements Runnable{
 			
 			else {
 				DBOps.updateData("info", "string_colour", Driver.currentUser.getName() + ": " + messageField.getText(), "id", "2");
+				int DBscore = Integer.parseInt((DBOps.getData("users", Driver.currentUser.getName(), "user", "messages")).get(0)) + 1;
+				DBOps.updateData("users", "messages", "" + DBscore, "user", Driver.currentUser.getName() );
 				try {
 					DBOps.updateData("info", "time_stamp", "" + getTimeStamp(), "id", "2");
 				} catch (ParseException e1) {
@@ -175,36 +178,20 @@ public class ChatPanel extends JPanel implements Runnable{
 		}
 		
 	}
-
-	public void run() {
-		if (!(DBOps.getData("info", "2", "id", "string_colour").get(0)
-				.equals(messages.get(messages.size() - 1)) && DBOps
-				.getData("info", "2", "id", "time_stamp").get(0)
-				.equals("" + lastSent))) {
-			lastSent = Long.parseLong(DBOps.getData("info", "2", "id", "time_stamp").get(0));
-			messages.add((String) DBOps.getData("info", "2", "id","string_colour").get(0));
-			try {
-				updateChat();
-			} catch (BadLocationException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 	
 
 	class ServerTime implements Runnable {
 		private volatile boolean isRunning;
+		private volatile String winner;
 		
 		public void run() {
 			if (Driver.currentUser != null)
 				isRunning = true;
 			while(isRunning) {
 				try {
-					System.out.println(Long.parseLong(DBOps.getData("info", "2", "id", "time_stamp").get(0)));
-					System.out.println(getTimeStamp());
 					int tempTime = Integer.parseInt((DBOps.getData("info", "4", "id", "time_stamp")).get(0)) - 10;
 					if (getTimeStamp() - Long.parseLong(DBOps.getData("info", "2", "id", "time_stamp").get(0))  >= 10 && Driver.returnRunning()) {
-						if (Integer.parseInt((DBOps.getData("info", "4", "id", "time_stamp")).get(0)) - 10 >= 0)
+						if (tempTime >= 0)
 							time = tempTime;
 						DBOps.updateData("info", "time_stamp", "" + time, "id", "4");
 						String s = (DBOps.getData("scores", "1", "id", "Snake")).get(0);
@@ -219,12 +206,21 @@ public class ChatPanel extends JPanel implements Runnable{
 							}
 						}
 						else {
-							String winner;
 							DBOps.updateData("info", "time_stamp", "False", "id", "3");
-							if (Integer.parseInt(s) > Integer.parseInt(c)) 
+							if (Integer.parseInt(s) > Integer.parseInt(c)) {
 								winner = "Snakes win!";
-							else if (Integer.parseInt(c) > Integer.parseInt(s))
+								if (Driver.playingSnake) {
+									int DBscore = Integer.parseInt((DBOps.getData("users", Driver.currentUser.getName(), "user", "wonSnake")).get(0)) + 1;
+									DBOps.updateData("users", "wonSnake", "" + DBscore, "user", Driver.currentUser.getName() );
+								}
+							}
+							else if (Integer.parseInt(c) > Integer.parseInt(s)) {
 								winner = "Collectors win!";
+								if (Driver.playingCollector) {
+									int DBscore = Integer.parseInt((DBOps.getData("users", Driver.currentUser.getName(), "user", "wonCollector")).get(0)) + 1;
+									DBOps.updateData("users", "wonCollector", "" + DBscore, "user", Driver.currentUser.getName() );
+								}
+							}
 							else
 								winner = "It's a tie!";
 							DBOps.updateData("info", "string_colour", "SkyNet" + ": " + "Game Over! " + winner + " S: " + s + " C: " + c, "id", "2");
@@ -254,6 +250,23 @@ public class ChatPanel extends JPanel implements Runnable{
 					else {
 						if (Driver.returnRunning() == false) {
 							isRunning = false;
+							
+							String s = (DBOps.getData("scores", "1", "id", "Snake")).get(0);
+							String c = (DBOps.getData("scores", "1", "id", "Collector")).get(0);
+							
+							if (Integer.parseInt(s) > Integer.parseInt(c)) {
+								if (Driver.playingSnake) {
+									int DBscore = Integer.parseInt((DBOps.getData("users", Driver.currentUser.getName(), "user", "wonSnake")).get(0)) + 1;
+									DBOps.updateData("users", "wonSnake", "" + DBscore, "user", Driver.currentUser.getName() );
+								}
+							}
+							else if (Integer.parseInt(c) > Integer.parseInt(s)) {
+								if (Driver.playingCollector) {
+									int DBscore = Integer.parseInt((DBOps.getData("users", Driver.currentUser.getName(), "user", "wonCollector")).get(0)) + 1;
+									DBOps.updateData("users", "wonCollector", "" + DBscore, "user", Driver.currentUser.getName() );
+								}
+							}
+								
 							Driver.newPanel.mainPanel.setLayout(new FlowLayout());
 							Driver.newPanel.mainPanel.removeAll();
 							Driver.newPanel.mainPanel.setPreferredSize(null);
@@ -310,5 +323,33 @@ public class ChatPanel extends JPanel implements Runnable{
 	public void restartThread() {
 		myTimer = new Thread(new ServerTime());
 		myTimer.start();
+	}
+	
+	private class ChatChecker implements Runnable {
+
+		private volatile boolean isRunning = true;
+		
+		public void run() {
+			while(isRunning) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				if (!(DBOps.getData("info", "2", "id", "string_colour").get(0)
+						.equals(messages.get(messages.size() - 1)) && DBOps
+						.getData("info", "2", "id", "time_stamp").get(0)
+						.equals("" + lastSent))) {
+					lastSent = Long.parseLong(DBOps.getData("info", "2", "id", "time_stamp").get(0));
+					messages.add((String) DBOps.getData("info", "2", "id","string_colour").get(0));
+					try {
+						updateChat();
+					} catch (BadLocationException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		
 	}
 }

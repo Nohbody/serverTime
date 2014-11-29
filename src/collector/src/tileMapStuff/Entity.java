@@ -1,8 +1,9 @@
 package collector.src.tileMapStuff;
 
-import main.DBOps;
-
 import java.awt.*;
+
+import main.DBOps;
+import main.Driver;
 
 public class Entity {
 	/** The x and y position of this entity in terms of grid cells
@@ -11,7 +12,7 @@ public class Entity {
 	protected float y;
 	protected Map map;
 	/** The size of this entity, this is used to calculate collisions with walls */
-	private float size = 0.55f;
+	private float size = 0.8f;
 	private boolean grounded = false;
     protected int score = 0;
     protected Color playColor = new Color(233, 9, 76);
@@ -99,7 +100,7 @@ public class Entity {
 		int xp = (int) (Map.TILE_SIZE * x);
 		int yp = (int) (Map.TILE_SIZE * y);
 		g.setColor(playColor);
-        g.fill3DRect(xp, yp-5, 11, 11, true);
+        g.fill3DRect(xp, yp, 18, 18, true);
 	}
 	
 	private class UpdateScore implements Runnable {
@@ -107,6 +108,8 @@ public class Entity {
 		public void run() {
 			int DBscore = Integer.parseInt((DBOps.getData("scores", "1", "id", "Collector")).get(0)) + 5;
             DBOps.updateData("scores", "Collector", "" + DBscore, "id", "1");
+            DBscore = Integer.parseInt((DBOps.getData("users", Driver.currentUser.getName(), "user", "scoredCollector")).get(0)) + 5;
+			DBOps.updateData("users", "scoredCollector", "" + DBscore, "user", Driver.currentUser.getName() );
             return;
 		}
 		
