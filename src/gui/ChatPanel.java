@@ -151,7 +151,7 @@ public class ChatPanel extends JPanel {
 			}
 			
 			else {
-				DBOps.updateData("info", "string_colour", Driver.currentUser.getName() + ": " + messageField.getText(), "id", "2");
+				DBOps.updateData("info", "string_colour", Driver.currentUser.getName() + ": " + messageField.getText().replaceAll("\"", "\\\\\""), "id", "2");
 				int DBscore = Integer.parseInt((DBOps.getData("users", Driver.currentUser.getName(), "user", "messages")).get(0)) + 1;
 				DBOps.updateData("users", "messages", "" + DBscore, "user", Driver.currentUser.getName() );
 				try {
