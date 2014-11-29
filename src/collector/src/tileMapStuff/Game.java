@@ -25,6 +25,7 @@ public class Game extends JPanel implements Runnable
     boolean right = false;
     boolean left = false;
     private String dbString = "", DBscore = "";
+    private int closeInt = 0;
     private Thread t, dbThread;
     //some more stuff that im adding from the game canvas
     Map map = new Map();
@@ -65,7 +66,7 @@ public class Game extends JPanel implements Runnable
             {
                 System.out.print("that database get failed");
             }
-            DBOps.updateData("player", "CloseBlock", "" + dbString, "id", "1");
+            DBOps.updateData("player", "CloseBlock", "" + closeInt, "id", "1");
             System.out.println("what up now im geting connected\n" + DBscore);
             return;
         }
@@ -91,7 +92,7 @@ public class Game extends JPanel implements Runnable
                 }
             }
             map.setClosest((int) currX, (int) currY);
-            dbString = "blockB";
+            closeInt = 2;
             dbThread = new Thread(new dbStuff(), "dbThread");
             dbThread.start();
             repaint();
