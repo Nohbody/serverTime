@@ -30,7 +30,7 @@ public class collectorPApplet extends PApplet
     Map map = new Map();
     private ArrayList<Coin> coins;
     Coin myCoin;
-    private float gravity = 0.048f;
+    private float gravity = 0.11f;
     Entity player;
 
 
