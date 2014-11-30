@@ -1,8 +1,9 @@
 package collector.src.tileMapStuff;//Chris Murphy
 
-import main.DBOps;
-
 import javax.swing.*;
+
+import main.Driver;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,12 +12,12 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 //sept 2013
-//purpose: a main
+//purpose: a main panel for the player and prince to do battle
 
 public class Game extends JPanel
 {
-    private static final long serialVersionUID = 1L;
-    private final int height = 270;
+	private static final long serialVersionUID = 1L;
+	private final int height = 270;
     private final int length = 450;
     private Color myPurp = new Color(150, 0, 220);
     //booleas for which key is pressed
@@ -24,16 +25,14 @@ public class Game extends JPanel
     boolean down = false;
     boolean right = false;
     boolean left = false;
-    private String dbString = "", DBscore = "";
-    private int closeInt = 0;
-    private Thread t, dbThread;
     //some more stuff that im adding from the game canvas
     Map map = new Map();
     private ArrayList<Coin> coins;
     Coin myCoin;
-    private float gravity = 0.048f;
+    private float gravity = 0.3f;
     Entity player;
-    Timer myTimer;
+    public Timer myTimer;
+
     //constructor
     public Game()
     {
@@ -45,29 +44,12 @@ public class Game extends JPanel
         setPreferredSize(new Dimension(length, height));
         setFocusable(true);
         myTimer = new Timer(12, new GameLoop());
-
         myTimer.start();
     }
 
-
-    private class dbStuff implements Runnable
-    {
-        public void run()
-        {
-			try
-            {
-                DBscore = (DBOps.getData("player", "1", "id", "CloseBlock")).get(0);
-            } catch (NullPointerException e)
-            {
-                System.out.print("that database get failed");
-            }
-            DBOps.updateData("player", "CloseBlock", "" + closeInt, "id", "1");
-            System.out.println("what up now im geting connected\n" + DBscore);
-            return;
-        }
-    }
     private class GameLoop implements ActionListener
     {
+
         public void actionPerformed(ActionEvent arg0)
         {
             requestFocus();
@@ -87,9 +69,12 @@ public class Game extends JPanel
                 }
             }
             map.setClosest((int) currX, (int) currY);
-            closeInt = 2;
-            dbThread = new Thread(new dbStuff(), "dbThread");
-            dbThread.start();
+            //begin to connect to the database
+      /*      String userName = "chris";
+            String userIdString = DBOps.getData("users", userName, userName, "id").get(0);
+            int userId = Integer.parseInt(userIdString);
+            DBOps.getData("player", "", "id", "string_colour").get(0);*/
+
             repaint();
             logic();
         }
@@ -102,9 +87,9 @@ public class Game extends JPanel
         float dx = 0;
         float dy = 0;
         float speed = 2.5f;
-        float jump = 9.0f;
-        float downPound = 6f;
-        float smoothing = 0.04f;
+        float jump = 20.0f;
+        float downPound = 2f;
+        float smoothing = 0.03f;
         if (left)
         {
             dx -= speed;

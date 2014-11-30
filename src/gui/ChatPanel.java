@@ -13,7 +13,9 @@ import java.awt.event.KeyListener;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.Timer;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -63,6 +65,7 @@ public class ChatPanel extends JPanel {
 		send = new JButton("Send");
 			send.addActionListener(new SendListener());
 			send.setEnabled(false);
+			send.setMultiClickThreshhold(1000);
 		messageArea = new JTextPane();
 			messageArea.setEditable(false);
 		DefaultCaret caret = (DefaultCaret)messageArea.getCaret();
@@ -103,6 +106,7 @@ public class ChatPanel extends JPanel {
 	}
 	
 	public void updateChat() throws BadLocationException {
+		Driver.displayFrame.toFront();
 		updateThread = new Thread(new UpdateChatThread());
 		updateThread.start();
 	}
@@ -316,6 +320,9 @@ public class ChatPanel extends JPanel {
 				}
 			};
 			
+			if ((messages.get(messages.size()-1).split(": ")[1].equals("Fantastic.")))
+				playSound("Fantastic.wav");
+			
 			messageArea.revalidate(); messageArea.repaint();
 			
 		}
@@ -351,6 +358,19 @@ public class ChatPanel extends JPanel {
 				}
 			}
 		}
+	}
+	
+	public void playSound(String soundName) {
 		
+		try {
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(soundName));
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioInputStream);
+			clip.start();
+		} 
+		catch (Exception ex) {
+			System.out.println("Error with playing sound.");
+			ex.printStackTrace();
+		}
 	}
 }

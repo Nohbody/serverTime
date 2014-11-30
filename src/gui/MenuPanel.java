@@ -1,8 +1,6 @@
 package gui;
 
 import collector.src.tileMapStuff.Game;
-import gui.ChatPanel.ServerTime;
-
 import javax.swing.*;
 
 import processing.core.PApplet;

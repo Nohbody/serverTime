@@ -26,7 +26,7 @@ public class Coin extends Entity
         // at 15,15.
         int xp = (int) (Map.TILE_SIZE * x);
         int yp = (int) (Map.TILE_SIZE * y);
-       // g.setColor(new Color(222, 104, 244));
+        g.setColor(new Color(222, 104, 244));
         g.drawRect (xp ,yp , Map.TILE_SIZE, Map.TILE_SIZE);
 
     }
