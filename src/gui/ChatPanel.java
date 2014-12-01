@@ -342,8 +342,7 @@ public class ChatPanel extends JPanel {
 			while(isRunning) {
 				long tempLastSent = Long.parseLong(DBOps.getData("info", "2", "id", "time_stamp").get(0));
 				String tempMessage = (String) DBOps.getData("info", "2", "id","string_colour").get(0);
-				if (tempMessage.equals(messages.get(messages.size()-1)) == false && 
-						(tempLastSent == lastSent) == false) {
+				if ((tempLastSent == lastSent) == false) {
 					lastSent = tempLastSent;
 					messages.add(tempMessage);
 					try {
