@@ -26,7 +26,7 @@ public class Game extends JPanel
     Map map = new Map();
     private ArrayList<Coin> coins;
 
-    private float gravity = 0.3f;
+    private float gravity = 0.055f;
     Entity player;
     public Timer myTimer;
 
@@ -83,10 +83,21 @@ public class Game extends JPanel
     {
         float dx = 0;
         float dy = 0;
-        float speed = 2.5f;
-        float jump = 20.0f;
+        float speed = 3.5f;
+        float jump = 9.0f;
         float downPound = 2f;
         float smoothing = 0.03f;
+        if (map.isBlocked(dx, dy) )
+        {
+            if (right)
+            {
+                right = false;
+            }
+            else if (!right)
+            {
+                right = true;
+            }
+        }
         if (left)
         {
             dx -= speed;

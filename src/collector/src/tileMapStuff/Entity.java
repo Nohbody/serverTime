@@ -65,6 +65,7 @@ public class Entity {
 	public boolean validLocation(float nx, float ny)
     {
 
+        grounded = false;
         if (map.isBlocked(nx, ny))
         {
             return false;
@@ -89,7 +90,8 @@ public class Entity {
     // check to see if Entity is grounded
     public boolean isGrounded()
     {
-        if (y >= Map.TILE_SIZE * Map.HEIGHT + 3)
+        grounded = true;
+        if (map.isBlocked(x, y +size))
         {
             grounded = true;
         }
@@ -100,7 +102,7 @@ public class Entity {
 		int xp = (int) (Map.TILE_SIZE * x);
 		int yp = (int) (Map.TILE_SIZE * y);
 		g.setColor(playColor);
-        g.fillRect(xp- 2, yp- 2, 10, 10);
+        g.fillRect(xp, yp, 10, 10);
 	}
 	
 	private class UpdateScore implements Runnable {
