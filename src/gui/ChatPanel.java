@@ -155,7 +155,7 @@ public class ChatPanel extends JPanel {
 			}
 			
 			else {
-				DBOps.updateData("info", "string_colour", Driver.currentUser.getName() + ": " + messageField.getText().replaceAll("\"", "\\\\\""), "id", "2");
+				DBOps.updateData("info", "string_colour", Driver.currentUser.getName() + ": " + messageField.getText().replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\""), "id", "2");
 				int DBscore = Integer.parseInt((DBOps.getData("users", Driver.currentUser.getName(), "user", "messages")).get(0)) + 1;
 				DBOps.updateData("users", "messages", "" + DBscore, "user", Driver.currentUser.getName() );
 				try {
@@ -171,11 +171,12 @@ public class ChatPanel extends JPanel {
 	private class EnterListener implements KeyListener {
 
 		public void keyPressed(KeyEvent e) {
-			if (e.getKeyCode() == KeyEvent.VK_ENTER)
-				send.doClick();
+			
 		}
 
-		public void keyReleased(KeyEvent arg0) {
+		public void keyReleased(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER)
+				send.doClick();
 		}
 
 		public void keyTyped(KeyEvent arg0) {
@@ -339,17 +340,12 @@ public class ChatPanel extends JPanel {
 		
 		public void run() {
 			while(isRunning) {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
-				if (!(DBOps.getData("info", "2", "id", "string_colour").get(0)
-						.equals(messages.get(messages.size() - 1)) && DBOps
-						.getData("info", "2", "id", "time_stamp").get(0)
-						.equals("" + lastSent))) {
-					lastSent = Long.parseLong(DBOps.getData("info", "2", "id", "time_stamp").get(0));
-					messages.add((String) DBOps.getData("info", "2", "id","string_colour").get(0));
+				long tempLastSent = Long.parseLong(DBOps.getData("info", "2", "id", "time_stamp").get(0));
+				String tempMessage = (String) DBOps.getData("info", "2", "id","string_colour").get(0);
+				if (tempMessage.equals(messages.get(messages.size()-1)) == false && 
+						(tempLastSent == lastSent) == false) {
+					lastSent = tempLastSent;
+					messages.add(tempMessage);
 					try {
 						updateChat();
 					} catch (BadLocationException e) {

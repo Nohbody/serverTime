@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.text.ParseException;
 
 import javax.swing.JButton;
@@ -14,6 +16,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.text.JTextComponent;
 
 import main.DBOps;
 import main.Driver;
@@ -69,8 +72,10 @@ public class LoginPanel extends JPanel {
 				password.setForeground(Color.WHITE);
 			usernameField = new JFormattedTextField();
 				usernameField.setColumns(10);
+				usernameField.addKeyListener(new RegexOnly());
 			passwordField = new JFormattedTextField();
 				passwordField.setColumns(10);
+				passwordField.addKeyListener(new RegexOnly());
 			submit = new JButton("Submit");
 				submit.addActionListener(new SubmitListener());
 			
@@ -124,18 +129,25 @@ public class LoginPanel extends JPanel {
 						found = true;
 						
 						if (passwordField.getText().equals(u.getPassword())) {
-							JOptionPane.showMessageDialog(null, "You are now logged in!");
-							Driver.currentUser = new User(u.getName(), passwordField.getText());
-							DBOps.updateData("users", "connected", "1", "user", u.getName());
-							DBOps.updateData("info", "string_colour", "SkyNet" + ": " + u.getName() + " has entered the fray.", "id", "2");
-							int DBscore = Integer.parseInt((DBOps.getData("users", Driver.currentUser.getName(), "user", "loggedIn")).get(0)) + 1;
-							DBOps.updateData("users", "loggedIn", "" + DBscore, "user", Driver.currentUser.getName() );
-							try {
-								DBOps.updateData("info", "time_stamp", "" + Driver.newPanel.chatPanel.getTimeStamp(), "id", "2");
-							} catch (ParseException e1) {
-								e1.printStackTrace();
+							if ((Integer.parseInt((DBOps.getData("users", u.getName(), "user", "connected")).get(0))) == 0) {
+								JOptionPane.showMessageDialog(null, "You are now logged in!");
+								Driver.currentUser = new User(u.getName(), passwordField.getText());
+								DBOps.updateData("users", "connected", "1", "user", u.getName());
+								DBOps.updateData("info", "string_colour", "SkyNet" + ": " + u.getName() + " has entered the fray.", "id", "2");
+								int DBscore = Integer.parseInt((DBOps.getData("users", Driver.currentUser.getName(), "user", "loggedIn")).get(0)) + 1;
+								DBOps.updateData("users", "loggedIn", "" + DBscore, "user", Driver.currentUser.getName() );
+								try {
+									DBOps.updateData("info", "time_stamp", "" + Driver.newPanel.chatPanel.getTimeStamp(), "id", "2");
+								} catch (ParseException e1) {
+									e1.printStackTrace();
+								}
+								success = true;
 							}
-							success = true;
+							else {
+								JOptionPane.showMessageDialog(null, "User is already logged in!");
+								success = false;
+								break;
+							}
 						}
 						else {
 							JOptionPane.showMessageDialog(null, "Invalid password!");
@@ -153,6 +165,11 @@ public class LoginPanel extends JPanel {
 			else {
 				Driver.updateUsers();
 				String attemptName = usernameField.getText();
+				if (attemptName.toLowerCase().equals("skynet") || attemptName.toLowerCase().equals("adam")) {
+					JOptionPane.showMessageDialog(null, "Hide.");
+					return;
+				}
+					
 				for (User u:Driver.users) {
 					if (attemptName.toLowerCase().trim().equals(u.getName().toLowerCase().trim())) {
 						JOptionPane.showMessageDialog(null, "This username has already been taken");
@@ -189,5 +206,23 @@ public class LoginPanel extends JPanel {
 			}
 			
 		}
+	}
+	
+	public class RegexOnly extends KeyAdapter {
+
+		private int MAXSIZE = 10;
+	    private String allowedRegex = "[^A-Za-z0-9]";
+
+	    public void keyReleased(KeyEvent e) {
+	        String curText = ((JTextComponent) e.getSource()).getText();
+	        curText = curText.replaceAll(allowedRegex, "");
+	        
+	        if (curText.length() > MAXSIZE)
+	        	curText = curText.substring(0, MAXSIZE);
+	        if (curText.equals(""))
+	        	curText = "0";
+	        
+	        ((JTextComponent) e.getSource()).setText(curText);
+	    }
 	}
 }

@@ -112,7 +112,7 @@ public class Map
                 if (data[x][y] == COIN)
                 {
 
-                    if (coinList.size() <6)
+                    if (coinList.size() < 5)
                         coinList.add(new Coin(this, x, y));
                     g.setColor(Color.GREEN);
                     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE/2 , TILE_SIZE/2 );
