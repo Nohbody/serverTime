@@ -1,9 +1,9 @@
 package collector.src.tileMapStuff;
 
-import java.awt.*;
-
 import main.DBOps;
 import main.Driver;
+
+import java.awt.*;
 
 public class Entity {
 	/** The x and y position of this entity in terms of grid cells
@@ -12,10 +12,10 @@ public class Entity {
 	protected float y;
 	protected Map map;
 	/** The size of this entity, this is used to calculate collisions with walls */
-	private float size = 0.8f;
+	private float size = 0.6f;
 	private boolean grounded = false;
     protected int score = 0;
-    protected Color playColor = new Color(233, 9, 76);
+    protected Color playColor = new Color(203, 34, 106);
     private Thread scoreThread = new Thread(new UpdateScore());
 
     public Entity(Map map, float x, float y)
@@ -49,7 +49,7 @@ public class Entity {
 			// if it doesn't then change our position to the new position
 			x = nx;
 			y = ny;
-			if (map.isCoin(x, y))
+			if (map.isCoin(x, y, 1))
             {
                 map.setClear((int)x, (int)y);
                 setScore(1);
@@ -100,7 +100,7 @@ public class Entity {
 		int xp = (int) (Map.TILE_SIZE * x);
 		int yp = (int) (Map.TILE_SIZE * y);
 		g.setColor(playColor);
-        g.fill3DRect(xp, yp, 18, 18, true);
+        g.fillRect(xp- (int)size, yp- (int)size, 16, 16);
 	}
 	
 	private class UpdateScore implements Runnable {

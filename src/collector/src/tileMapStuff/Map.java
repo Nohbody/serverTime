@@ -58,16 +58,16 @@ public class Map
                         {1, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 1},
                         {1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1},
                         {1, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
-                        {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
                         {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
                         {1, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
-                        {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
                         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
                         {1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1},
                         {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1},
                         {1, 0, 0, 0, 2, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1},
                         {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1},
-                        {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
                         {1, 0, 2, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1},
                         {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1},
                         {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1},
@@ -111,15 +111,17 @@ public class Map
                 }
                 if (data[x][y] == COIN)
                 {
-                    coinList.add(new Coin(this, x, y));
+
+                    if (coinList.size() <6)
+                        coinList.add(new Coin(this, x, y));
                     g.setColor(Color.GREEN);
-                    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE / 2, TILE_SIZE / 2);
+                    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE/2 , TILE_SIZE/2 );
 
                 }
                 if (data[x][y] == CLOSEST)
                 {
                     g.setColor(coinColor);
-                    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE / 2, TILE_SIZE / 2);
+                    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE/2 , TILE_SIZE/2 );
 
                 }
             }
@@ -138,9 +140,28 @@ public class Map
         return data[(int) x][(int) y] == BLOCKED;
     }
 
-    public boolean isCoin(float x, float y)
+    public boolean isCoin(float x, float y, int size)
     {
-        return data[(int) x][(int) y] == COIN || data[(int) x][(int) y] == CLOSEST;
+
+        if (data[(int) x][(int) y] == COIN || data[(int) x][(int) y] == CLOSEST)
+        {
+            return true;
+        }
+        if (data[(int) x+ (int)size][(int) y] == COIN || data[(int) x + (int)size][(int) y] == CLOSEST)
+        {
+            return true;
+        }
+        if (data[(int) x][(int) y + (int) size] == COIN || data[(int) x][(int) y + (int) size] == CLOSEST)
+        {
+
+            return true;
+        }
+        if (data[(int) x + (int)size ][(int) y + (int)size] == COIN || data[(int) x + (int)size][(int) y + (int)size] == CLOSEST)
+        {
+
+            return true;
+        }
+        return false;
     }
 
     public void setClear(int x, int y)
@@ -171,13 +192,25 @@ public class Map
         Random rand = new Random();
         int x = rand.nextInt(WIDTH);
         int y = rand.nextInt(HEIGHT);
-        if (data[x][y] != BLOCKED && data[x][y] != COIN)
+        if (data[x][y] == CLEAR)
         {
             data[x][y] = COIN;
         }
-        if (data[x][y] == BLOCKED)
+        else if (data[x][y] == BLOCKED)
         {
             resetCoin();
         }
+        else
+        {
+            //data[x][y] = CLEAR;
+
+        }
+        if (coinList.size() < 5)
+        {
+            x = rand.nextInt(WIDTH);
+            y = rand.nextInt(HEIGHT);
+
+        }
+        System.out.println(data);
     }
 }
