@@ -1,9 +1,6 @@
 package collector.src.tileMapStuff;//Chris Murphy
 
 import javax.swing.*;
-
-import main.Driver;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,7 +25,7 @@ public class Game extends JPanel
     //some more stuff that im adding from the game canvas
     Map map = new Map();
     private ArrayList<Coin> coins;
-    Coin myCoin;
+
     private float gravity = 0.3f;
     Entity player;
     public Timer myTimer;
@@ -38,7 +35,7 @@ public class Game extends JPanel
     {
         player = new Entity(map, 3f, 2f);
         coins = new ArrayList<Coin>();
-        myCoin = new Coin(map, 60, 60);
+
         addKeyListener(new DirectionListener());
         setBackground(Color.black);
         setPreferredSize(new Dimension(length, height));

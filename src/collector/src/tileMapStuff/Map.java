@@ -25,7 +25,7 @@ public class Map
     /**
      * The actual data for our map
      */
-    private Color coinColor = new Color(244, 20, 100);
+    private Color coinColor = new Color(204, 180, 100);
     private int[][] data;
     public ArrayList<Coin> coinList = new ArrayList<Coin>();
 
@@ -116,15 +116,22 @@ public class Map
                         coinList.add(new Coin(this, x, y));
                     g.setColor(Color.GREEN);
                     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE/2 , TILE_SIZE/2 );
+                    data[x][y] = CLEAR;
 
                 }
                 if (data[x][y] == CLOSEST)
                 {
                     g.setColor(coinColor);
-                    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE/2 , TILE_SIZE/2 );
+                    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE , TILE_SIZE );
 
                 }
             }
+        }
+        int count = 0;
+        while (coinList.size() > count)
+        {
+            data[(int) coinList.get(count).getX()][(int) coinList.get(count).getY()] = COIN;
+            count ++;
         }
     }
 
@@ -147,20 +154,20 @@ public class Map
         {
             return true;
         }
-        if (data[(int) x+ (int)size][(int) y] == COIN || data[(int) x + (int)size][(int) y] == CLOSEST)
-        {
-            return true;
-        }
-        if (data[(int) x][(int) y + (int) size] == COIN || data[(int) x][(int) y + (int) size] == CLOSEST)
-        {
-
-            return true;
-        }
-        if (data[(int) x + (int)size ][(int) y + (int)size] == COIN || data[(int) x + (int)size][(int) y + (int)size] == CLOSEST)
-        {
-
-            return true;
-        }
+//        if (data[(int) x+ (int)size][(int) y] == COIN || data[(int) x + (int)size][(int) y] == CLOSEST)
+//        {
+//            return true;
+//        }
+//        if (data[(int) x][(int) y + (int) size] == COIN || data[(int) x][(int) y + (int) size] == CLOSEST)
+//        {
+//
+//            return true;
+//        }
+//        if (data[(int) x + (int)size ][(int) y + (int)size] == COIN || data[(int) x + (int)size][(int) y + (int)size] == CLOSEST)
+//        {
+//
+//            return true;
+//        }
         return false;
     }
 
