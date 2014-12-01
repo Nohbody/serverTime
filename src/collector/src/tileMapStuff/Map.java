@@ -80,6 +80,7 @@ public class Map
                 };
     }
 
+
     public ArrayList<Coin> getCoinList()
     {
         return coinList;
