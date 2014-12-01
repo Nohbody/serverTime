@@ -112,7 +112,7 @@ public class ChatPanel extends JPanel {
 	}
 	
 	public long getTimeStamp() throws ParseException {
-		return System.currentTimeMillis() / 1000L;
+		return System.currentTimeMillis();
 	}
 	
 	private class SendListener implements ActionListener {
