@@ -41,6 +41,7 @@ public class LoginPanel extends JPanel {
 	public JFormattedTextField usernameField, passwordField;
 	public JButton submit;
 	private boolean loggingin;
+	public RegexOnly myRegex;
 	
 	public LoginPanel() {
 		login = new JButton("Login!");
@@ -66,16 +67,18 @@ public class LoginPanel extends JPanel {
 			gLayout= new GridBagLayout();
 			c = new GridBagConstraints();
 	
+			myRegex = new RegexOnly();
+			
 			username = new JLabel("Username:");
 				username.setForeground(Color.WHITE);
 			password = new JLabel("Password:");
 				password.setForeground(Color.WHITE);
 			usernameField = new JFormattedTextField();
 				usernameField.setColumns(10);
-				usernameField.addKeyListener(new RegexOnly());
+				usernameField.addKeyListener(myRegex);
 			passwordField = new JFormattedTextField();
 				passwordField.setColumns(10);
-				passwordField.addKeyListener(new RegexOnly());
+				passwordField.addKeyListener(myRegex);
 			submit = new JButton("Submit");
 				submit.addActionListener(new SubmitListener());
 			
@@ -120,6 +123,14 @@ public class LoginPanel extends JPanel {
 			boolean success = true;
 			boolean found = false;
 			
+			usernameField.setText(usernameField.getText().replaceAll("[^A-Za-z0-9]", ""));
+			passwordField.setText(passwordField.getText().replaceAll("[^A-Za-z0-9]", ""));
+			
+	        if (usernameField.getText().length() > 20)
+	        	usernameField.setText(usernameField.getText().substring(0, 20));
+	        if (passwordField.getText().length() > 15)
+	        	passwordField.setText(passwordField.getText().substring(0, 20));
+	        
 			// Log in check
 			if (loggingin) {
 				Driver.updateUsers();
@@ -210,7 +221,7 @@ public class LoginPanel extends JPanel {
 	
 	public class RegexOnly extends KeyAdapter {
 
-		private int MAXSIZE = 10;
+		private int MAXSIZE = 20;
 	    private String allowedRegex = "[^A-Za-z0-9]";
 
 	    public void keyReleased(KeyEvent e) {
@@ -219,8 +230,6 @@ public class LoginPanel extends JPanel {
 	        
 	        if (curText.length() > MAXSIZE)
 	        	curText = curText.substring(0, MAXSIZE);
-	        if (curText.equals(""))
-	        	curText = "0";
 	        
 	        ((JTextComponent) e.getSource()).setText(curText);
 	    }
